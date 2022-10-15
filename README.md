@@ -19,9 +19,13 @@ builtins
 	exit
 
 \< redirect input
+
 \> redirect output
+
 \<< ???
+
 \>> redirect output in append mode
+
 
 handle environment variables
 implement pipes
