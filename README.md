@@ -9,6 +9,7 @@
 Lexer -> Tokens
 Parser -> AST?
 
+
 builtins
 	echo -n
 	cd
@@ -17,6 +18,7 @@ builtins
 	unset
 	env
 	exit
+
 
 \< redirect input
 
