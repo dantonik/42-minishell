@@ -10,7 +10,7 @@ Lexer -> Tokens
 Parser -> AST?  
 
 
-builtins
+builtins  
 	echo -n  
 	cd  
 	pwd  
@@ -31,7 +31,7 @@ implement pipes
 $? expands to the exit status of the most recently executed foreground pipeline  
 handle ctrl-C/D/\  
 
-Bonus part
+Bonus part  
 	&& and || with parenthesis for priorities  
 	wildcards *  
   
