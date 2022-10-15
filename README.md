@@ -20,13 +20,10 @@ builtins
 	exit
 
 
-\< redirect input
-
-\> redirect output
-
-\<< ???
-
-\>> redirect output in append mode
+\< redirect input  
+\> redirect output  
+\<< ???  
+\>> redirect output in append mode  
 
 
 handle environment variables
