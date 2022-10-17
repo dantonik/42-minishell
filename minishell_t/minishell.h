@@ -14,21 +14,17 @@
 typedef struct LEXER_STRUCT
 {
 	char				*cmnd;
+	int					length;
 	struct LEXER_STRUCT	*next;
 	struct LEXER_STRUCT	*prev;
 }	t_lexer;
 
-typedef struct HIST_STRUCT
-{
-	int					nbr;
-	char				*cmd_line;
-	struct HIST_STRUCT	*next;
-	struct HIST_STRUCT	*prev;
-}	t_hist;
+//-----> MAIN <-----//
+void	strip_whitespace(t_lexer *lexer);
 
+//-----> INIT LIST <-----//
 t_lexer	*create_list(char **array);
 void	print_list(t_lexer *lexer);
 void	free_list(t_lexer *head);
-void	put_input_in_history(char *input_line);
 
 #endif

@@ -16,6 +16,7 @@ void	print_list(t_lexer *lexer)
 {
 	while (lexer)
 	{
+		strip_whitespace(lexer);
 		printf("%s", lexer->cmnd);
 		lexer = lexer->next;
 		printf("\n");
