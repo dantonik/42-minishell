@@ -6,7 +6,7 @@
 /*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 02:01:39 by dantonik          #+#    #+#             */
-/*   Updated: 2022/10/19 02:07:17 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/10/19 02:21:37 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,6 @@ int	skip_whitespace(char *input)
 	while (input[i] != '\0' && (input[i] == ' ' || \
 	input[i] == 13 || input[i] == 10 || input[i] == '\t'))
 		i++;
-	return (i);
-}
-
-int	skip_whitespace_rev(char *input, int i)
-{
-	while (input[i] != '\0' && i != 0 && (input[i] == ' ' || \
-	input[i] == 13 || input[i] == 10 || input[i] == '\t'))
-		i--;
 	return (i);
 }
 
