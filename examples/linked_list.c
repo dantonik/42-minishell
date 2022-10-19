@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   linked_list.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 02:01:19 by dantonik          #+#    #+#             */
-/*   Updated: 2022/10/19 02:09:24 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/10/19 22:17:27 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	printl(t_head *head)
 	current = head->head;
 	while (current != NULL)
 	{
-		printf("___%s___ [%u]\n", current->cmnd, current->type);
+		printf("___%s___ [%u], invalid: %d\n", current->cmnd, current->type, current->invalid);
 		i++;
 		current = current->next;
 	}

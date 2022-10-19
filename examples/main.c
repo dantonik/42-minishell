@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 02:00:52 by dantonik          #+#    #+#             */
-/*   Updated: 2022/10/19 21:15:08 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/10/19 22:21:16 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int	main(int argc, char **argv, char **envp)
 		if (input)
 			add_history(input);
 		create_list(&head, input);
+		validate(&head, envp);
 		printl(head);
 		free_list(head);
 	}

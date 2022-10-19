@@ -20,7 +20,7 @@ typedef enum e_bool
 typedef struct Node
 {
 	char			*cmnd;
-	t_bool			valid;
+	t_bool			invalid;
 	enum
 	{
 		CMND,
@@ -80,5 +80,7 @@ void	strip_whitespace(t_node *lexer);
 void	printl_env(t_env_head *head);
 void	add_env_tail(t_env_head **head, char *key, char *value);
 void	init_envs(t_env_head **head, char **env);
+
+void	validate(t_head **head, char *envp[]);
 
 #endif
