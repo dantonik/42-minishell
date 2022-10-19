@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 20:16:17 by cboubour          #+#    #+#             */
-/*   Updated: 2022/10/19 21:19:25 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/10/20 00:40:33 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,20 @@ static void	my_free(char **arr)
 	free (arr);
 }
 
-static char	**split_paths(char *envp[])
+static char	**split_paths(t_env_head *envp)
 {
-	int		i;
-	char	**paths;
+	char		**paths;
+	t_env_node	*current;
 
-	i = 0;
-	while (envp[i])
+	current = envp->head;
+	while (current != NULL)
 	{
-		if (!ft_strncmp(envp[i], "PATH=", 5))
+		if (!ft_strncmp(current->key, "PATH", 4))
 		{
-			paths = ft_split(envp[i] + 5, ':');
+			paths = ft_split(current->value, ':');
 			return (paths);
 		}
-		i++;
+		current = current->next;
 	}
 	return (NULL);
 }
@@ -57,35 +57,39 @@ static char	*ft_join_path(char *s1, char connector, char *s2)
 	return (path);
 }
 
-void	validate(t_head **head, char *envp[])
+void	validate(t_head *head, t_env_head *envp)
 {
 	char			**command;
 	char			**paths;
 	char			*path;
-	static t_bool	valid = FALSE;
+	static t_bool	valid;
 	t_node			*temp;
 	int				i;
 
-	temp = (*head)->head;
-	while (temp && temp->type == CMND)
+	temp = head->head;
+	while (temp)
 	{
-		command = ft_split(temp->cmnd, ' ');
-		paths = split_paths(envp);
-		if (paths == NULL)
-			perror(MINISHELL);
-		i = 0;
-		while (paths[i])
+		if (temp->type == CMND)
 		{
-			path = ft_join_path(paths[i], '/', command[0]);
-			if (access(path, F_OK | X_OK) == 0)
-				valid = TRUE;
-			free(path);
-			i++;
+			valid = FALSE;
+			command = ft_split(temp->cmnd, ' ');
+			paths = split_paths(envp);
+			if (paths == NULL)
+				perror(MINISHELL);
+			i = 0;
+			while (paths[i])
+			{
+				path = ft_join_path(paths[i], '/', command[0]);
+				if (access(path, F_OK | X_OK) == 0)
+					valid = TRUE;
+				free(path);
+				i++;
+			}
+			if (!valid)
+				temp->invalid = TRUE;
+			my_free(command);
+			my_free(paths);
 		}
-		if (!valid)
-			temp->invalid = TRUE;
-		my_free(command);
-		my_free(paths);
 		temp = temp->next;
 	}
 }

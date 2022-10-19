@@ -74,13 +74,13 @@ void	free_list(t_head *a);
 int		skip_whitespace(char *input);
 int		create_token(t_head **head, char *input);
 void	create_list(t_head **head, char *input);
-void	strip_whitespace(t_node *lexer);
+char	*strip_multi_space(char *s);
 
 //-- ENV_VARS --//
 void	printl_env(t_env_head *head);
 void	add_env_tail(t_env_head **head, char *key, char *value);
 void	init_envs(t_env_head **head, char **env);
 
-void	validate(t_head **head, char *envp[]);
+void	validate(t_head *head, t_env_head *envp);
 
 #endif
