@@ -3,7 +3,7 @@ NAME = minishell
 LIBFT = libft/libft.a
 READLINE = -I~/.brew/opt/readline/include
 LIBRARY = -L$$HOME/.brew/opt/readline/lib -lreadline
-SRC = main.c linked_list.c lexer.c
+SRC = main.c linked_list.c lexer.c env_vars.c
 
 OBJ = 	$(SRC:.c=.o)
 

@@ -11,9 +11,16 @@
 
 # define MINISHELL "\033[1;93mminishell % \033[0;39m"
 
+typedef enum e_bool
+{
+	TRUE = 1,
+	FALSE = 0
+}	t_bool;
+
 typedef struct Node
 {
 	char			*cmnd;
+	t_bool			valid;
 	enum
 	{
 		CMND,
@@ -22,6 +29,7 @@ typedef struct Node
 		RED_IN,
 		HEREDOC,
 		APPEND,
+		FILE_N,
 		PIPE,
 		SQ,
 		DQ
@@ -40,6 +48,22 @@ typedef struct linkedList
 	struct Node		*tail;
 }				t_head;
 
+typedef struct NodeEnv
+{
+	char			*key;
+	char			*value;
+	int				length;
+	struct NodeEnv	*next;
+	struct NodeEnv	*prev;
+}				t_env_node;
+
+typedef struct linkedListEnv
+{
+	int				length;
+	struct NodeEnv	*head;
+	struct NodeEnv	*tail;
+}				t_env_head;
+
 //-- LINKED_LIST --//
 void	add_token_tail(t_head **head, char *str, int type);
 void	printl(t_head *head);
@@ -51,5 +75,10 @@ int		skip_whitespace(char *input);
 int		create_token(t_head **head, char *input);
 void	create_list(t_head **head, char *input);
 void	strip_whitespace(t_node *lexer);
+
+//-- ENV_VARS --//
+void	printl_env(t_env_head *head);
+void	add_env_tail(t_env_head **head, char *key, char *value);
+void	init_envs(t_env_head **head, char **env);
 
 #endif
