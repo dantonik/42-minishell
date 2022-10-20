@@ -102,4 +102,7 @@ void	free_env_list(t_env_head *a);
 //-- BUILTINS --//
 void	check_builtins(t_head **h);
 
+void	validate(t_head *head, t_env_head *envp);
+void	redirect_in(t_head *head);
+
 #endif

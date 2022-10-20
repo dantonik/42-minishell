@@ -3,27 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dns <dns@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 02:00:52 by dantonik          #+#    #+#             */
-/*   Updated: 2022/10/20 16:01:56 by dns              ###   ########.fr       */
+/*   Updated: 2022/10/21 00:34:02 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_start()
+void	print_start(void)
 {
-printf("\033[1;36m\n\033[0;36m");
-printf("    .                               oooo             .oooo.         .oooo.   \n");
-printf("  .o8                               `888           .dP\"\"Y88b      .dP\"\"Y88b  \n");
-printf(".o888oo oooo d8b  .oooo.    .oooo.o  888 .oo.            ]8P'           ]8P' \n");
-printf("  888   `888\"\"8P `P  )88b  d88(  \"8  888P\"Y88b       <88b.           .d8P'  \n");
-printf("  888    888      .oP\"888  `\"Y88b.   888   888          `88b.       .dP'     \n");
-printf("  888 .  888     d8(  888  o.  )88b  888   888     o.   .88P  .o. .oP     .o \n");
-printf("  \"888\" d888b    `Y888\"\"8o 8\"\"888P' o888o o888o    `8bd88P'   Y8P 8888888888 \n");
-printf("                                                                             \n");
-printf("\n");
+	printf("\033[1;36m\n\033[0;36m");
+	printf("    .                               oooo             .oooo.         .oooo.   \n");
+	printf("  .o8                               `888           .dP\"\"Y88b      .dP\"\"Y88b  \n");
+	printf(".o888oo oooo d8b  .oooo.    .oooo.o  888 .oo.            ]8P'           ]8P' \n");
+	printf("  888   `888\"\"8P `P  )88b  d88(  \"8  888P\"Y88b       <88b.           .d8P'  \n");
+	printf("  888    888      .oP\"888  `\"Y88b.   888   888          `88b.       .dP'     \n");
+	printf("  888 .  888     d8(  888  o.  )88b  888   888     o.   .88P  .o. .oP     .o \n");
+	printf("  \"888\" d888b    `Y888\"\"8o 8\"\"888P' o888o o888o    `8bd88P'   Y8P 8888888888 \n");
+	printf("                                                                             \n");
+	printf("\n");
 }
 
 void	free_list_loop(t_head **a)
@@ -89,6 +89,8 @@ int	main(int argc, char **argv, char **envp)
 		create_list(&head, input);
 		if (head->head != NULL && head->tail != NULL)
 			edge_cases(head, env_head);
+		validate(head, env_head);
+		redirect_in(head);
 		check_builtins(&head);
 		printl(head);
 		free_list_loop(&head);
