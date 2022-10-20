@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dns <dns@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 02:00:52 by dantonik          #+#    #+#             */
-/*   Updated: 2022/10/20 02:12:43 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/10/20 16:01:56 by dns              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,14 @@ void	edge_cases(t_head *head, t_env_head *env_head)
 }
 
 
-void	ft_sig_handler(int signal)
-{
-	(void) signal;
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
+// void	ft_sig_handler(int signal)
+// {
+// 	(void) signal;
+// 	printf("\n");
+// 	rl_on_new_line();
+// 	rl_replace_line("", 0);
+// 	rl_redisplay();
+// }
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -73,8 +73,8 @@ int	main(int argc, char **argv, char **envp)
 		return (EXIT_FAILURE);
 	}
 	print_start();
-	signal(SIGINT, ft_sig_handler);
-	signal(SIGQUIT, SIG_IGN);
+	// signal(SIGINT, ft_sig_handler);
+	// signal(SIGQUIT, SIG_IGN);
 	env_head = (t_env_head *)malloc(sizeof(t_env_head));
 	init_envs(&env_head, envp);
 	// printl_env(env_head);
@@ -89,7 +89,8 @@ int	main(int argc, char **argv, char **envp)
 		create_list(&head, input);
 		if (head->head != NULL && head->tail != NULL)
 			edge_cases(head, env_head);
-		// printl(head);
+		check_builtins(&head);
+		printl(head);
 		free_list_loop(&head);
 	}
 	free(head);

@@ -1,7 +1,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "./libft/libft.h"
+# include "libft/libft.h"
 # include <fcntl.h>
 # include <stdio.h>
 # include <unistd.h>
@@ -28,7 +28,17 @@ typedef struct Node
 {
 	char			*cmnd;
 	t_bool			invalid;
-	t_bool			builtin;
+	enum
+	{
+		T_NOB,
+		T_ECHO,
+		T_CD,
+		T_PWD,
+		T_EXPORT,
+		T_UNSET,
+		T_ENV,
+		T_EXIT
+	}	t_builtin;
 	enum
 	{
 		CMND,
@@ -88,5 +98,8 @@ void	printl_env(t_env_head *head);
 void	add_env_tail(t_env_head **head, char *key, char *value);
 void	init_envs(t_env_head **head, char **env);
 void	free_env_list(t_env_head *a);
+
+//-- BUILTINS --//
+void	check_builtins(t_head **h);
 
 #endif

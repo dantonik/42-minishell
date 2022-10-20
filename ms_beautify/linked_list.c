@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   linked_list.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dns <dns@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 02:01:19 by dantonik          #+#    #+#             */
-/*   Updated: 2022/10/20 02:09:20 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/10/20 16:16:38 by dns              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,37 +56,27 @@ void	free_list(t_head *a)
 void	printl(t_head *head)
 {
 	t_node	*current;
-	int		i;
 
-	i = 0;
 	if (head == NULL)
 		return ;
 	current = head->head;
 	while (current != NULL)
 	{
-		printf("___%s___ [%u]\n", current->cmnd, current->type);
-		i++;
+		printf("___%s___\t[type:%u]\t[builtin:%u]\n", current->cmnd, current->type, current->t_builtin);
 		current = current->next;
 	}
-	printf("\n\t--> %i elements.\n", i);
 }
 
 void	printl_rev(t_head *head)
 {
 	t_node	*current;
-	int		i;
 
-	i = 0;
 	if (head == NULL)
 		return ;
-	current = head->head;
-	while (current->next != NULL)
-		current = current->next;
+	current = head->tail;
 	while (current != NULL)
 	{
 		printf("___%s___ [%u]\n", current->cmnd, current->type);
-		i++;
 		current = current->prev;
 	}
-	printf("\n\t--> %i elements.\n", i);
 }
