@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 02:00:52 by dantonik          #+#    #+#             */
-/*   Updated: 2022/10/21 00:34:02 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/10/25 22:43:21 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void	edge_cases(t_head *head, t_env_head *env_head)
 	if (head->head->type == PIPE || head->tail->type == PIPE)
 		printf("trash: syntax error near unexpected token `|'\n");
 }
-
 
 // void	ft_sig_handler(int signal)
 // {

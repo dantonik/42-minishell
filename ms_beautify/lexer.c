@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 02:01:39 by dantonik          #+#    #+#             */
-/*   Updated: 2022/10/20 00:06:41 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/10/24 01:05:05 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,20 +54,31 @@ int	skip_whitespace(char *input)
 
 int	add_pipe(t_head **head, char *str, char *input)
 {
+	int	i;
+	int	j;
+	// char	*str;
+
 	if (input[0] == '<' && input[1] != '\0' && input[1] == '<')
 	{
-		str = (char *)malloc(sizeof(char) * (3));
-		str[0] = '<';
-		str[1] = '<';
-		str[2] = '\0';
+		i = 2;
+		while (input[i] != '\0' && input[i] == ' ')
+			i++;
+		while (input[i] != '\0' && input[i] != ' ')
+			i++;
+		str = (char *)malloc(sizeof(char) * (i + 1));
+		j = 0;
+		while (j < i)
+		{
+			str[j] = input[j];
+			j++;
+		}
+		str[j] = '\0';
+		str = strip_multi_space(str);
 		add_token_tail(head, str, HEREDOC);
+		return (i);
 	}
 	else if (input[0] == '<')
 	{
-		int	i;
-		int	j;
-		char	*str;
-
 		i = 1;
 		while (input[i] != '\0' && input[i] == ' ')
 			i++;

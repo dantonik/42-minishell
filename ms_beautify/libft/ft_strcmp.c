@@ -1,32 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/29 17:23:23 by cboubour          #+#    #+#             */
-/*   Updated: 2022/10/24 01:50:44 by cboubour         ###   ########.fr       */
+/*   Created: 2022/10/24 01:51:09 by cboubour          #+#    #+#             */
+/*   Updated: 2022/10/24 01:55:43 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	unsigned char	u1;
-	unsigned char	u2;
+	size_t			i;
+	unsigned char	*new1;
+	unsigned char	*new2;
 
-	while (n-- > 0)
-	{
-		u1 = (unsigned char) *s1;
-		u2 = (unsigned char) *s2;
-		if (u1 != u2)
-			return (u1 - u2);
-		if (u1 == '\0')
-			return (0);
-		s1++;
-		s2++;
-	}
-	return (0);
+	i = 0;
+	new1 = (unsigned char *)s1;
+	new2 = (unsigned char *)s2;
+	while (new1[i] && new2[i] && (new1[i] - new2[i] == 0))
+		i++;
+	if (!new1[i] && new2[i])
+		return (-1);
+	else if (new1[i] && !new2[i])
+		return (1);
+	else if (!new1[i] && !new2[i])
+		return (0);
+	else
+		return (new1[i] - new2[i]);
 }
