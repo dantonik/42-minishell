@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/10/27 23:42:44 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/04 19:58:45 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,21 @@ static void	exit_free(void)
 {
 	perror(MINISHELL);
 	exit(EXIT_FAILURE);
+}
+
+int	last_red_in(t_node *temp)
+{
+	int		last_red;
+
+	while (temp && temp->type != PIPE)
+	{
+		if (temp->type == RED_OUT || temp->type == APPEND)
+		{
+			last_red = temp->pos;
+		}
+		temp = temp->next;
+	}
+	return (last_red);
 }
 
 static int	red_file(t_node *temp, t_bool append)
@@ -38,7 +53,7 @@ static int	red_file(t_node *temp, t_bool append)
 		free(file);
 	}
 	else
-		f_out = open(file, O_RDWR | O_CREAT | O_APPEND | O_TRUNC, 0777);
+		f_out = open(file, O_RDWR | O_CREAT | O_APPEND, 0777);
 	return (f_out);
 }
 
@@ -61,11 +76,11 @@ static int	red_out_file_exists(t_head *head)
 {
 	t_node			*temp;
 	int				f_out;
-	int				count_files;
+	int				last;
 
 	temp = head->head;
-	count_files = 0;
-	while (temp && temp->type != PIPE)
+	last = last_red_in(temp);
+	while (temp && temp->type != PIPE && temp->pos < last)
 	{
 		if (temp->type == RED_OUT || temp->type == APPEND)
 		{
@@ -76,11 +91,10 @@ static int	red_out_file_exists(t_head *head)
 			if (f_out < 0)
 				exit_free();
 			close(f_out);
-			count_files++;
 		}
 		temp = temp->next;
 	}
-	return (count_files);
+	return (last);
 }
 
 void	redirect_out(t_head *head)
@@ -88,16 +102,14 @@ void	redirect_out(t_head *head)
 	t_node			*temp;
 	int				f_out;
 	int				last_red;
-	int				count;
 
 	temp = head->head;
 	last_red = red_out_file_exists(head);
-	count = 0;
 	while (temp && temp->type != PIPE)
 	{
-		if (++count == last_red)
+		if (temp->pos == last_red)
 		{
-			if (temp->type == RED_IN)
+			if (temp->type == RED_OUT)
 				setup_dup2(temp, FALSE);
 			else if (temp->type == APPEND)
 				setup_dup2(temp, TRUE);

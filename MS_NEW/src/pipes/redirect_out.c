@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/10/27 23:42:44 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/04 19:59:29 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	red_file(t_node *temp, t_bool append)
 		free(file);
 	}
 	else
-		f_out = open(file, O_RDWR | O_CREAT | O_APPEND | O_TRUNC, 0777);
+		f_out = open(file, O_RDWR | O_CREAT | O_APPEND, 0777);
 	return (f_out);
 }
 

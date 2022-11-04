@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/03 00:08:13 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/04 19:42:32 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	exit_free(void)
 	exit(EXIT_FAILURE);
 }
 
-int	last_red_in(t_node *temp)
+static int	last_red_in(t_node *temp)
 {
 	int		last_red;
 
@@ -64,7 +64,7 @@ static void	setup_dup2(int first_param, int second_param)
 	saved_stdin = dup(0);
 	if (dup2(first_param, second_param) < 0)
 		perror("dup2");
-	execve("/bin/cat", ft_split("cat", ' '), NULL);
+	// execve("/bin/cat", ft_split("cat", ' '), NULL);
 	dup2(saved_stdin, 0);
 	close(saved_stdin);
 }
