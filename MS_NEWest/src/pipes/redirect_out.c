@@ -6,11 +6,27 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/04 19:58:45 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/05 01:06:39 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+
+static t_bool	is_cmnd(t_head *head)
+{
+	t_node		*temp;
+	t_bool		exists;
+
+	temp = head->head;
+	exists = FALSE;
+	while (temp && temp->type != PIPE)
+	{
+		if (temp->type == CMND && temp->cmnd_path != NULL)
+			exists = TRUE;
+		temp = temp->next;
+	}
+	return (exists);
+}
 
 static void	exit_free(void)
 {
@@ -59,16 +75,16 @@ static int	red_file(t_node *temp, t_bool append)
 
 static void	setup_dup2(t_node *temp, t_bool append)
 {
-	int	saved_stdin;
 	int	f_out;
 
 	f_out = red_file(temp, append);
-	saved_stdin = dup(1);
+	temp->std_out[0] = 1;
+	temp->std_out[1] = dup(1);
 	if (dup2(f_out, STDOUT_FILENO) < 0)
 		perror("dup2");
-	execve("/bin/ls", ft_split("ls", ' '), NULL);
-	dup2(saved_stdin, 1);
-	close(saved_stdin);
+	// execve("/bin/ls", ft_split("ls", ' '), NULL);
+	// dup2(temp->std_out[1], 1);
+	// close(temp->std_out[1]);
 	close(f_out);
 }
 
@@ -80,7 +96,7 @@ static int	red_out_file_exists(t_head *head)
 
 	temp = head->head;
 	last = last_red_in(temp);
-	while (temp && temp->type != PIPE && temp->pos < last)
+	while (temp && temp->type != PIPE && (temp->pos < last || !is_cmnd(head)))
 	{
 		if (temp->type == RED_OUT || temp->type == APPEND)
 		{
@@ -92,6 +108,8 @@ static int	red_out_file_exists(t_head *head)
 				exit_free();
 			close(f_out);
 		}
+		else if (temp->type == CMND && temp->cmnd_path == NULL)
+			exit_free();
 		temp = temp->next;
 	}
 	return (last);
@@ -107,12 +125,14 @@ void	redirect_out(t_head *head)
 	last_red = red_out_file_exists(head);
 	while (temp && temp->type != PIPE)
 	{
-		if (temp->pos == last_red)
+		if (temp->pos == last_red && is_cmnd(head))
 		{
 			if (temp->type == RED_OUT)
 				setup_dup2(temp, FALSE);
 			else if (temp->type == APPEND)
 				setup_dup2(temp, TRUE);
+			else if (temp->type == CMND && temp->cmnd_path == NULL)
+				exit_free();
 		}
 		temp = temp->next;
 	}

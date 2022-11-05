@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:13 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/02 20:07:54 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/04 23:50:22 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,7 @@ void		free_list_loop(t_head **a);
 //// PIPES
 void		redirect_in(t_head *head);
 void		redirect_out(t_head *head);
+void		validate(t_head *head, t_env_head *envp);
+void		execute(t_head *head);
 
 #endif

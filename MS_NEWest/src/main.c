@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/03 00:32:41 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/04 23:50:28 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ int	main(int argc, char **argv, char **envp)
 		check_builtins(head);
 		redirect_in(head);
 		redirect_out(head);
+		validate(head, env_head);
+		execute(head);
 		free(input);
 		printl(head);
 		free_list_loop(&head);

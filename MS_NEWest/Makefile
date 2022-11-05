@@ -6,7 +6,7 @@
 #    By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/24 22:05:24 by dantonik          #+#    #+#              #
-#    Updated: 2022/11/02 20:56:35 by cboubour         ###   ########.fr        #
+#    Updated: 2022/11/04 23:49:13 by cboubour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,8 @@ SRC = main.c \
 	lexer/string_utils.c \
 	linked_list/linked_list.c \
 	pipes/redirect_in.c \
-	pipes/redirect_out.c
+	pipes/redirect_out.c \
+	pipes/execution.c
 
 VPATH = src
 

@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:16:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/02 23:57:29 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/04 23:25:36 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,13 @@ typedef enum e_bool
 typedef struct Node
 {
 	char			*cmnd;
+	char			*cmnd_path;
+//..........................................
 	int				pos;
-	t_bool			invalid;
 	int				here_fd[2];
+	int				std_in[2];
+	int				std_out[2];
+//..........................................
 	enum
 	{
 		T_NOB,
