@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/05 01:09:38 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/09 01:08:27 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ static t_bool	is_cmnd(t_head *head)
 	{
 		if (temp->type == CMND && temp->cmnd_path != NULL)
 			exists = TRUE;
+		temp = temp->next;
 	}
-	temp = temp->next;
 	return (exists);
 }
 
@@ -90,7 +90,6 @@ static void	use_append(t_node *temp, t_bool just_print)
 	char	*delim;
 
 	red_file(temp, TRUE, &delim);
-	printf("got in, %d, %s\n", just_print, delim);
 	input = readline("> ");
 	while (ft_strcmp(input, delim) != 0)
 	{
