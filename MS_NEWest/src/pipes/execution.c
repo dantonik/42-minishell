@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:22:15 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/09 02:18:53 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/09 23:28:10 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,8 +116,7 @@ void	execute(t_head *head)
 		if (temp->type == CMND && temp->cmnd_path != NULL)
 		{
 			command = ft_split(temp->cmnd, ' ');
-			if (execve(temp->cmnd_path, command, NULL) == -1)
-				perror("execve\n");
+			fork_exec(temp, command);
 			my_free(command);
 			if (temp->std_in[0] == 1)
 			{

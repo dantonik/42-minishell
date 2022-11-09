@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:16:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/04 23:25:36 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/09 23:21:39 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ typedef struct Node
 //..........................................
 	int				pos;
 	int				here_fd[2];
-	int				std_in[2];
-	int				std_out[2];
+	int				*std_in;
+	int				*std_out;
 //..........................................
 	enum
 	{
@@ -62,6 +62,8 @@ typedef struct linkedList
 {
 	int				length;
 	int				pipes;
+	int				std_input[2];
+	int				std_output[2];
 	int				cmnds;
 	struct Node		*head;
 	struct Node		*tail;

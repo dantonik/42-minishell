@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/09 02:07:32 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/09 23:31:40 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,12 @@ int	main(int argc, char **argv, char **envp)
 		printf("trash: send the environment please!\n");
 		return (EXIT_FAILURE);
 	}
-	env_head = (t_env_head *)malloc(sizeof(t_env_head));
+	env_head = (t_env_head *)ft_calloc(1, sizeof(t_env_head));
 	init_envs(&env_head, envp);
 	// printl_env(env_head);
-	head = (t_head *)malloc(sizeof(t_head));
+	head = (t_head *)ft_calloc(1, sizeof(t_head));
+	if (head == NULL)
+		exit(1);
 	(void) argv;
 	while (1)
 	{
@@ -47,7 +49,7 @@ int	main(int argc, char **argv, char **envp)
 		redirect_out(head);
 		execute(head);
 		free(input);
-		printl(head);
+		// printl(head);
 		free_list_loop(&head);
 	}
 	free(head);
