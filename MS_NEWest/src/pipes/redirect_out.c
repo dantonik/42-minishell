@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/05 01:06:39 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/09 02:04:47 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,12 @@ static t_bool	is_cmnd(t_head *head)
 	return (exists);
 }
 
-static void	exit_free(void)
+static void	exit_free(char *err)
 {
-	perror(MINISHELL);
+	perror(err);
 	exit(EXIT_FAILURE);
 }
+
 
 int	last_red_in(t_node *temp)
 {
@@ -105,11 +106,11 @@ static int	red_out_file_exists(t_head *head)
 			else if (temp->type == APPEND)
 				f_out = red_file(temp, TRUE);
 			if (f_out < 0)
-				exit_free();
+				exit_free("red_out_file_exists1");
 			close(f_out);
 		}
 		else if (temp->type == CMND && temp->cmnd_path == NULL)
-			exit_free();
+			exit_free("red_out_file_exists2");
 		temp = temp->next;
 	}
 	return (last);
@@ -132,7 +133,7 @@ void	redirect_out(t_head *head)
 			else if (temp->type == APPEND)
 				setup_dup2(temp, TRUE);
 			else if (temp->type == CMND && temp->cmnd_path == NULL)
-				exit_free();
+				exit_free("redirect_out");
 		}
 		temp = temp->next;
 	}

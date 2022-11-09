@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:22:15 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/09 01:06:21 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/09 02:18:53 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	validate(t_head *head, t_env_head *envp)
 			command = ft_split(temp->cmnd, ' ');
 			paths = split_paths(envp);
 			if (paths == NULL)
-				perror(MINISHELL);
+				perror("validate");
 			i = 0;
 			while (paths[i])
 			{
@@ -96,10 +96,12 @@ void	fork_exec(t_node *temp, char **command)
 
 	pid = fork();
 	if (pid == -1)
-		perror(MINISHELL);
+		perror("fork\n");
 	if (pid == 0)
+	{
 		if (execve(temp->cmnd_path, command, NULL) == -1)
-			perror(MINISHELL);
+			perror("fork\n");
+	}
 	waitpid(pid, NULL, 0);
 }
 
@@ -114,7 +116,8 @@ void	execute(t_head *head)
 		if (temp->type == CMND && temp->cmnd_path != NULL)
 		{
 			command = ft_split(temp->cmnd, ' ');
-			fork_exec(temp, command);
+			if (execve(temp->cmnd_path, command, NULL) == -1)
+				perror("execve\n");
 			my_free(command);
 			if (temp->std_in[0] == 1)
 			{

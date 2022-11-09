@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/09 01:08:27 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/09 02:03:57 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ static t_bool	is_cmnd(t_head *head)
 	return (exists);
 }
 
-static void	exit_free(void)
+static void	exit_free(char *err)
 {
-	perror(MINISHELL);
+	perror(err);
 	exit(EXIT_FAILURE);
 }
 
@@ -125,14 +125,14 @@ static int	red_in_file_exists(t_head *head, char **file)
 			{
 				f_in = red_file(temp, FALSE, file);
 				if (f_in < 0)
-					exit_free();
+					exit_free("red_in_file_exists1");
 				close(f_in);
 			}
 			else if (temp->type == HEREDOC)
 				use_append(temp, TRUE);
 		}
 		else if (temp->type == CMND && temp->cmnd_path == NULL)
-			exit_free();
+			exit_free("red_in_file_exists2");
 		temp = temp->next;
 	}
 	return (last);
@@ -160,7 +160,7 @@ void	redirect_in(t_head *head)
 			else if (temp->type == HEREDOC)
 				use_append(temp, FALSE);
 			else if (temp->type == CMND && temp->cmnd_path == NULL)
-				exit_free();
+				exit_free("redirect_in");
 		}
 		temp = temp->next;
 	}
