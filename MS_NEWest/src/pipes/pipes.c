@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 01:00:04 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/14 01:00:00 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/14 23:22:08 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,21 @@ void	main_loop(t_head *head, t_env_head *envp)
 			perror(MINISHELL);
 		if (head->current->type == PIPE)
 		{
-			// redirect_in(head->current->next);
-			// redirect_out(head->current->next);
+			redirect_in(head->current->next);
+			redirect_out(head->current->next);
 			head->current = execute(head->current->next);
 		}
 		else
 		{
-			// redirect_in(head->current);
-			// redirect_out(head->current);
+			redirect_in(head->current);
+			redirect_out(head->current);
 			head->current = execute(head->current);
 		}
-		// exit(EXIT_FAILURE);
+	}
+	while (head->cnt_pid > 0)
+	{
+		waitpid(0, &(head->pid), 0);
+		head->cnt_pid--;
 	}
 }
 
@@ -69,7 +73,6 @@ void	pipes_child(t_node *temp, char **command)
 	// dprintf(temp->head->std_output[1], "cmnd1: %s, std_output: %d, pipelock: %d\n", command[0], temp->head->std_output[0], pipe_loc);
 	if (temp->head->std_input[0] != 1 && (pipe_loc == 0 || pipe_loc == PIPE_IN_OUT))
 	{
-		// dprintf(temp->head->std_output[1], "cmnd:%s ,pipe_fd[READ]:%d->0\n", command[0], temp->head->pipe_fd[READ]);
 		if (dup2(temp->head->temp_fd, STDIN_FILENO) != -1)
 			close(temp->head->temp_fd);
 		else
@@ -77,7 +80,6 @@ void	pipes_child(t_node *temp, char **command)
 	}
 	if (temp->head->std_output[0] != 1 && (pipe_loc == 1 || pipe_loc == PIPE_IN_OUT))
 	{
-		// dprintf(temp->head->std_output[1], "cmnd:%s ,pipe_fd[WRITE]:%d->1\n", command[0], temp->head->pipe_fd[WRITE]);
 		if (dup2(temp->head->pipe_fd[WRITE], STDOUT_FILENO) == -1)
 			perror("dup2 in fork");
 	}
@@ -93,14 +95,12 @@ void	pipes_parent(t_node *temp)
 	// printf("std_output: %d, pipelock: %d\n", temp->head->std_output[0], pipe_loc);
 	if (temp->head->std_input[0] != 1 && pipe_loc == 0)
 	{
-		// printf("inpipe\n");
 		close(temp->head->temp_fd);
 		close(temp->head->pipe_fd[READ]);
 		close(temp->head->pipe_fd[WRITE]);
 	}
 	if (temp->head->std_output[0] != 1 && pipe_loc == 1)
 	{
-		// printf("outpipe \n");
 		close(temp->head->pipe_fd[WRITE]);
 		temp->head->temp_fd = temp->head->pipe_fd[READ];
 	}
@@ -110,5 +110,4 @@ void	pipes_parent(t_node *temp)
 		close(temp->head->pipe_fd[WRITE]);
 		temp->head->temp_fd = temp->head->pipe_fd[READ];
 	}
-	temp->head->pipe = pipe_loc;
 }

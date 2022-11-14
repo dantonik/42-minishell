@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:22:15 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/14 01:09:37 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/14 23:10:31 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ void	fork_exec(t_node *temp, char **command)
 	pid = fork();
 	if (pid == -1)
 		perror("fork\n");
+	temp->head->pid = pid;
+	temp->head->cnt_pid++;
 	if (pid == 0)
 	{
 		pipes_child(temp, command);
@@ -104,8 +106,6 @@ void	fork_exec(t_node *temp, char **command)
 			perror("fork\n");
 	}
 	pipes_parent(temp);
-	// dprintf(temp->head->std_output[1], "cmnd2: %s\n", command[0]);
-	waitpid(pid, NULL, 0);
 }
 
 void	remake_in_out(t_node *temp)
@@ -132,9 +132,8 @@ t_node	*execute(t_node *temp)
 		if (temp->type == CMND && temp->cmnd_path != NULL)
 		{
 			command = ft_split(temp->cmnd, ' ');
-			// dprintf(temp->head->std_output[1], "cmnd: %s\n", command[0]);
 			fork_exec(temp, command);
-			// remake_in_out(temp);
+			remake_in_out(temp);
 			my_free(command);
 		}
 		temp = temp->next;

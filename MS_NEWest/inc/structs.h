@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:16:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/14 00:28:44 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/14 23:21:35 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,10 @@ typedef struct linkedList
 {
 	int				length;
 // .......................................
-	int				pipe;
-	t_bool			double_pipe;
+	int				pid;
+	int				cnt_pid;
 	int				temp_fd;
 	int				pipe_fd[2];
-	int				pipe_fd2[2];
 	int				std_input[2];
 	int				std_output[2];
 // .......................................
