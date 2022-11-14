@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:16:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/09 23:21:39 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/14 00:28:44 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,12 @@ typedef enum e_bool
 
 typedef struct Node
 {
-	char			*cmnd;
-	char			*cmnd_path;
+	char				*cmnd;
+	char				*cmnd_path;
 //..........................................
-	int				pos;
-	int				here_fd[2];
-	int				*std_in;
-	int				*std_out;
+	int					pos;
+	int					here_fd[2];
+	struct linkedList	*head;
 //..........................................
 	enum
 	{
@@ -53,19 +52,26 @@ typedef struct Node
 		SQ,
 		DQ
 	} type;
-	int				length;
-	struct Node		*next;
-	struct Node		*prev;
+	int					length;
+	struct Node			*next;
+	struct Node			*prev;
 }				t_node;
 
 typedef struct linkedList
 {
 	int				length;
-	int				pipes;
+// .......................................
+	int				pipe;
+	t_bool			double_pipe;
+	int				temp_fd;
+	int				pipe_fd[2];
+	int				pipe_fd2[2];
 	int				std_input[2];
 	int				std_output[2];
+// .......................................
 	int				cmnds;
 	struct Node		*head;
+	struct Node		*current;
 	struct Node		*tail;
 }				t_head;
 

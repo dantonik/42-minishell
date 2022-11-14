@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:22:15 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/09 23:28:10 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/14 01:09:37 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,36 +99,45 @@ void	fork_exec(t_node *temp, char **command)
 		perror("fork\n");
 	if (pid == 0)
 	{
+		pipes_child(temp, command);
 		if (execve(temp->cmnd_path, command, NULL) == -1)
 			perror("fork\n");
 	}
+	pipes_parent(temp);
+	// dprintf(temp->head->std_output[1], "cmnd2: %s\n", command[0]);
 	waitpid(pid, NULL, 0);
 }
 
-void	execute(t_head *head)
+void	remake_in_out(t_node *temp)
+{
+
+	if (temp->head->std_input[0] == 1)
+	{
+		dup2(temp->head->std_input[1], 0);
+		temp->head->std_input[0] = 0;
+	}
+	if (temp->head->std_output[0] == 1)
+	{
+		dup2(temp->head->std_output[1], 1);
+		temp->head->std_input[0] = 0;
+	}
+}
+
+t_node	*execute(t_node *temp)
 {
 	char			**command;
-	t_node			*temp;
 
-	temp = head->head;
-	while (temp)
+	while (temp && temp->type != PIPE)
 	{
 		if (temp->type == CMND && temp->cmnd_path != NULL)
 		{
 			command = ft_split(temp->cmnd, ' ');
+			// dprintf(temp->head->std_output[1], "cmnd: %s\n", command[0]);
 			fork_exec(temp, command);
+			// remake_in_out(temp);
 			my_free(command);
-			if (temp->std_in[0] == 1)
-			{
-				dup2(temp->std_in[1], 0);
-				close(temp->std_in[1]);
-			}
-			if (temp->std_out[0] == 1)
-			{
-				dup2(temp->std_out[1], 1);
-				close(temp->std_out[1]);
-			}
 		}
 		temp = temp->next;
 	}
+	return (temp);
 }

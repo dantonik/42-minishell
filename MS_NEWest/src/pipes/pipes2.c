@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 01:00:04 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/14 01:00:00 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/14 00:08:17 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ void	main_loop(t_head *head, t_env_head *envp)
 	validate(head, envp);
 	while (head->current)
 	{
-		if (pipe(head->pipe_fd) == -1)
-			perror(MINISHELL);
 		if (head->current->type == PIPE)
 		{
 			// redirect_in(head->current->next);
@@ -60,6 +58,36 @@ int	pipe_in_out(t_node *current)
 	return (res);
 }
 
+// void	pipes(t_node *temp)
+// {
+// 	int	pipe_loc;
+
+// 	pipe_loc = pipe_in_out(temp->head->current);
+// 	// dprintf(temp->head->std_output[1], "std_output: %d, pipelock: %d\n", temp->head->std_output[0], pipe_loc);
+// 	if (temp->head->std_input[0] != 1 && (pipe_loc == 0 || pipe_loc == PIPE_IN_OUT))
+// 	{
+// 		if (dup2(temp->head->pipe_fd[READ], STDIN_FILENO) != -1)
+// 		{
+// 			dprintf(temp->head->std_output[1], "inpipe\n");
+// 			temp->head->pipe = pipe_loc;
+// 			temp->head->std_input[0] = 1;
+// 		}
+// 		else
+// 			perror("dup2 in pipes");
+// 	}
+// 	if (temp->head->std_output[0] != 1 && (pipe_loc == 1 || pipe_loc == PIPE_IN_OUT))
+// 	{
+// 		if (dup2(temp->head->pipe_fd[WRITE], STDOUT_FILENO) != -1)
+// 		{
+// 			temp->head->pipe = pipe_loc;
+// 			temp->head->std_output[0] = 1;
+// 			dprintf(temp->head->std_output[1], "outpipe \n");
+// 		}
+// 		else
+// 			perror("dup2 in pipes");
+// 	}
+// }
+
 void	pipes_child(t_node *temp, char **command)
 {
 	int	pipe_loc;
@@ -67,22 +95,49 @@ void	pipes_child(t_node *temp, char **command)
 
 	pipe_loc = pipe_in_out(temp->head->current);
 	// dprintf(temp->head->std_output[1], "cmnd1: %s, std_output: %d, pipelock: %d\n", command[0], temp->head->std_output[0], pipe_loc);
-	if (temp->head->std_input[0] != 1 && (pipe_loc == 0 || pipe_loc == PIPE_IN_OUT))
+	if (temp->head->std_input[0] != 1 && pipe_loc == 0)
 	{
 		// dprintf(temp->head->std_output[1], "cmnd:%s ,pipe_fd[READ]:%d->0\n", command[0], temp->head->pipe_fd[READ]);
-		if (dup2(temp->head->temp_fd, STDIN_FILENO) != -1)
-			close(temp->head->temp_fd);
+		if (temp->head->double_pipe == TRUE)
+			read_pipe = temp->head->pipe_fd2[READ];
+		else
+		{
+			read_pipe = temp->head->pipe_fd[READ];
+		}
+		if (dup2(read_pipe, STDIN_FILENO) != -1)
+		{
+			close(read_pipe);
+		}
 		else
 			perror("dup2 in fork");
 	}
-	if (temp->head->std_output[0] != 1 && (pipe_loc == 1 || pipe_loc == PIPE_IN_OUT))
+	if (temp->head->std_output[0] != 1 && pipe_loc == 1)
 	{
 		// dprintf(temp->head->std_output[1], "cmnd:%s ,pipe_fd[WRITE]:%d->1\n", command[0], temp->head->pipe_fd[WRITE]);
-		if (dup2(temp->head->pipe_fd[WRITE], STDOUT_FILENO) == -1)
+		if (dup2(temp->head->pipe_fd[WRITE], STDOUT_FILENO) != -1)
+		{
+			close(temp->head->pipe_fd[WRITE]);
+			close(temp->head->pipe_fd[READ]);
+		}
+		else
 			perror("dup2 in fork");
 	}
-	close(temp->head->pipe_fd[READ]);
-	close(temp->head->pipe_fd[WRITE]);
+	if (temp->head->std_output[0] != 1 && pipe_loc == PIPE_IN_OUT)
+	{
+		if (dup2(temp->head->pipe_fd[READ], STDIN_FILENO) != -1)
+		{
+			close(temp->head->pipe_fd[READ]);
+			// close(temp->head->pipe_fd[WRITE]);
+		}
+		else
+			perror("dup2 in fork");
+		if (dup2(temp->head->pipe_fd2[WRITE], STDOUT_FILENO) != -1)
+		{
+			close(temp->head->pipe_fd2[WRITE]);
+			close(temp->head->pipe_fd2[READ]);
+
+		}
+	}
 }
 
 void	pipes_parent(t_node *temp)
@@ -94,21 +149,23 @@ void	pipes_parent(t_node *temp)
 	if (temp->head->std_input[0] != 1 && pipe_loc == 0)
 	{
 		// printf("inpipe\n");
-		close(temp->head->temp_fd);
-		close(temp->head->pipe_fd[READ]);
-		close(temp->head->pipe_fd[WRITE]);
+		if (temp->head->double_pipe == TRUE)
+			close(temp->head->pipe_fd2[READ]);
+		else
+			close(temp->head->pipe_fd[READ]);
 	}
 	if (temp->head->std_output[0] != 1 && pipe_loc == 1)
 	{
 		// printf("outpipe \n");
 		close(temp->head->pipe_fd[WRITE]);
-		temp->head->temp_fd = temp->head->pipe_fd[READ];
 	}
 	if (temp->head->std_output[0] != 1 && pipe_loc == PIPE_IN_OUT)
 	{
-		close(temp->head->temp_fd);
-		close(temp->head->pipe_fd[WRITE]);
-		temp->head->temp_fd = temp->head->pipe_fd[READ];
+		close(temp->head->pipe_fd[READ]);
+		close(temp->head->pipe_fd2[WRITE]);
+		temp->head->double_pipe = TRUE;
 	}
+	else
+		temp->head->double_pipe = FALSE;
 	temp->head->pipe = pipe_loc;
 }

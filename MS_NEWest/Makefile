@@ -6,7 +6,7 @@
 #    By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/24 22:05:24 by dantonik          #+#    #+#              #
-#    Updated: 2022/11/09 23:23:37 by cboubour         ###   ########.fr        #
+#    Updated: 2022/11/12 21:56:45 by cboubour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ AUTHORS = dantonik, cboubour
 DATE = $$(date +%Y/%m/%d)
 
 CC = cc
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -O2 -Wall -Wextra -Werror
 HEADERS = -I ./include -I $(LIBMLX)/include -I $(LIBFT)
 LIBFT = ./lib/libft
 OBJDIR = obj
@@ -33,7 +33,8 @@ SRC = main.c \
 	linked_list/linked_list.c \
 	pipes/redirect_in.c \
 	pipes/redirect_out.c \
-	pipes/execution.c
+	pipes/execution.c \
+	pipes/pipes.c
 
 VPATH = src
 

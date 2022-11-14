@@ -6,18 +6,18 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/09 02:03:57 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/12 00:20:58 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static t_bool	is_cmnd(t_head *head)
+static t_bool	is_cmnd(t_node *current)
 {
 	t_node		*temp;
 	t_bool		exists;
 
-	temp = head->head;
+	temp = current;
 	exists = FALSE;
 	while (temp && temp->type != PIPE)
 	{
@@ -75,8 +75,7 @@ static int	red_file(t_node *temp, t_bool heredoc, char **file)
 
 static void	setup_dup2(t_node *temp, int first_param, int second_param)
 {
-	temp->std_in[0] = 1;
-	temp->std_in[1] = dup(0);
+	temp->head->std_input[0] = 1;
 	if (dup2(first_param, second_param) < 0)
 		perror("dup2");
 	// execve("/bin/cat", ft_split("cat", ' '), NULL);
@@ -84,7 +83,7 @@ static void	setup_dup2(t_node *temp, int first_param, int second_param)
 	// close(temp->std_in[1]);
 }
 
-static void	use_append(t_node *temp, t_bool just_print)
+static void	use_heredoc(t_node *temp, t_bool just_print)
 {
 	char	*input;
 	char	*delim;
@@ -105,19 +104,20 @@ static void	use_append(t_node *temp, t_bool just_print)
 	{
 		close(temp->here_fd[WRITE]);
 		setup_dup2(temp, temp->here_fd[READ], STDIN_FILENO);
+		close(temp->here_fd[READ]);
 	}
 	free(input);
 }
 
-static int	red_in_file_exists(t_head *head, char **file)
+static int	red_in_file_exists(t_node *current, char **file)
 {
 	t_node			*temp;
 	int				f_in;
 	int				last;
 
-	temp = head->head;
+	temp = current;
 	last = last_red_in(temp);
-	while (temp && temp->type != PIPE && (temp->pos < last || !is_cmnd(head)))
+	while (temp && temp->type != PIPE && (temp->pos < last || !is_cmnd(current)))
 	{
 		if ((temp->type == RED_IN || temp->type == HEREDOC))
 		{
@@ -129,7 +129,7 @@ static int	red_in_file_exists(t_head *head, char **file)
 				close(f_in);
 			}
 			else if (temp->type == HEREDOC)
-				use_append(temp, TRUE);
+				use_heredoc(temp, TRUE);
 		}
 		else if (temp->type == CMND && temp->cmnd_path == NULL)
 			exit_free("red_in_file_exists2");
@@ -138,18 +138,18 @@ static int	red_in_file_exists(t_head *head, char **file)
 	return (last);
 }
 
-void	redirect_in(t_head *head)
+void	redirect_in(t_node *current)
 {
-	t_node			*temp;
 	int				f_in;
 	int				last_red;
 	char			*file;
+	t_node			*temp;
 
-	temp = head->head;
-	last_red = red_in_file_exists(head, &file);
+	temp = current;
+	last_red = red_in_file_exists(current, &file);
 	while (temp && temp->type != PIPE)
 	{
-		if (temp->pos == last_red && is_cmnd(head))
+		if (temp->pos == last_red && is_cmnd(current))
 		{
 			if (temp->type == RED_IN)
 			{
@@ -158,7 +158,7 @@ void	redirect_in(t_head *head)
 				close(f_in);
 			}
 			else if (temp->type == HEREDOC)
-				use_append(temp, FALSE);
+				use_heredoc(temp, FALSE);
 			else if (temp->type == CMND && temp->cmnd_path == NULL)
 				exit_free("redirect_in");
 		}

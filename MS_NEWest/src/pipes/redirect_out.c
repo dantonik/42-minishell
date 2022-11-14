@@ -6,18 +6,18 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/09 02:04:47 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/12 00:21:04 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static t_bool	is_cmnd(t_head *head)
+static t_bool	is_cmnd(t_node *current)
 {
 	t_node		*temp;
 	t_bool		exists;
 
-	temp = head->head;
+	temp = current;
 	exists = FALSE;
 	while (temp && temp->type != PIPE)
 	{
@@ -79,8 +79,7 @@ static void	setup_dup2(t_node *temp, t_bool append)
 	int	f_out;
 
 	f_out = red_file(temp, append);
-	temp->std_out[0] = 1;
-	temp->std_out[1] = dup(1);
+	temp->head->std_output[0] = 1;
 	if (dup2(f_out, STDOUT_FILENO) < 0)
 		perror("dup2");
 	// execve("/bin/ls", ft_split("ls", ' '), NULL);
@@ -89,15 +88,15 @@ static void	setup_dup2(t_node *temp, t_bool append)
 	close(f_out);
 }
 
-static int	red_out_file_exists(t_head *head)
+static int	red_out_file_exists(t_node *current)
 {
 	t_node			*temp;
 	int				f_out;
 	int				last;
 
-	temp = head->head;
+	temp = current;
 	last = last_red_in(temp);
-	while (temp && temp->type != PIPE && (temp->pos < last || !is_cmnd(head)))
+	while (temp && temp->type != PIPE && (temp->pos < last || !is_cmnd(current)))
 	{
 		if (temp->type == RED_OUT || temp->type == APPEND)
 		{
@@ -116,17 +115,17 @@ static int	red_out_file_exists(t_head *head)
 	return (last);
 }
 
-void	redirect_out(t_head *head)
+void	redirect_out(t_node *current)
 {
 	t_node			*temp;
 	int				f_out;
 	int				last_red;
 
-	temp = head->head;
-	last_red = red_out_file_exists(head);
+	temp = current;
+	last_red = red_out_file_exists(current);
 	while (temp && temp->type != PIPE)
 	{
-		if (temp->pos == last_red && is_cmnd(head))
+		if (temp->pos == last_red && is_cmnd(current))
 		{
 			if (temp->type == RED_OUT)
 				setup_dup2(temp, FALSE);

@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/09 23:31:40 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/14 00:32:03 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ int	main(int argc, char **argv, char **envp)
 	if (head == NULL)
 		exit(1);
 	(void) argv;
+	head->std_input[1] = dup(0);
+	head->std_output[1] = dup(1);
 	while (1)
 	{
 		input = NULL;
@@ -42,16 +44,20 @@ int	main(int argc, char **argv, char **envp)
 		if (input)
 			add_history(input);
 		head->length = 0;
+		head->pipe = -1;
+		// if (pipe(head->pipe_fd) == -1)
+		// 	perror(MINISHELL);
+		// if (pipe(head->pipe_fd2) == -1)
+		// 	perror(MINISHELL);
 		create_list(&head, input);
 		check_builtins(head);
-		validate(head, env_head);
-		redirect_in(head);
-		redirect_out(head);
-		execute(head);
+		main_loop(head, env_head);
 		free(input);
 		// printl(head);
 		free_list_loop(&head);
 	}
+	close(head->std_input[1]);
+	close(head->std_output[1]);
 	free(head);
 	return (0);
 }

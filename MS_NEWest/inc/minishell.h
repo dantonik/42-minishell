@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:13 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/04 23:50:22 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/13 23:52:47 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # define MINISHELL "\033[1;93mtrash-3.2$ \033[0;39m"
 # define WRITE 1
 # define READ 0
+# define PIPE_IN_OUT 10
+
 
 //// BUILTINS
 void		check_builtins(t_head *head);
@@ -62,9 +64,13 @@ void		printl(t_head *head);
 void		free_list_loop(t_head **a);
 
 //// PIPES
-void		redirect_in(t_head *head);
-void		redirect_out(t_head *head);
+void		redirect_in(t_node *head);
+void		redirect_out(t_node *head);
 void		validate(t_head *head, t_env_head *envp);
-void		execute(t_head *head);
+t_node		*execute(t_node *head);
+void		pipes_child(t_node *temp, char **command);
+void		pipes_parent(t_node *temp);
+void		main_loop(t_head *head, t_env_head *envp);
+int			pipe_in_out(t_node *current);
 
 #endif
