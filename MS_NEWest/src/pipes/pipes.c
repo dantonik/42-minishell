@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 01:00:04 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/15 01:39:03 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/15 23:36:28 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	pipes_child(t_node *temp, char **command)
 		if (dup2(temp->head->pipe_fd[WRITE], STDOUT_FILENO) == -1)
 			perror("dup2 in fork");
 	}
-	if (temp->head->std_input[0] == 1)
+	if (temp->head->std_input[0] == 1 && temp->head->temp_fd != -1)
 		close(temp->head->temp_fd);
 	close(temp->head->pipe_fd[READ]);
 	close(temp->head->pipe_fd[WRITE]);
@@ -106,11 +106,10 @@ void	pipes_parent(t_node *temp)
 			close(temp->head->pipe_fd[WRITE]);
 		temp->head->temp_fd = temp->head->pipe_fd[READ];
 	}
-	if (temp->head->std_input[0] == 1)
+	if (temp->head->std_input[0] == 1 && pipe_loc != 1)
 	{
 		close(temp->head->temp_fd);
 		close(temp->head->pipe_fd[READ]);
-		if (temp->head->std_output[0] == 1)
-			close(temp->head->pipe_fd[WRITE]);
+		close(temp->head->pipe_fd[WRITE]);
 	}
 }

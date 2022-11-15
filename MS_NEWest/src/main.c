@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/15 00:17:18 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/15 23:00:04 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	main(int argc, char **argv, char **envp)
 		if (input)
 			add_history(input);
 		head->length = 0;
+		head->temp_fd = -1;
 		create_list(&head, input);
 		check_builtins(head);
 		main_loop(head, env_head);

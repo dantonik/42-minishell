@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/15 00:18:43 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/15 23:38:44 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,31 +122,29 @@ static int	red_in_file_exists(t_node *current, char **file)
 			{
 				f_in = red_file(temp, FALSE, file);
 				if (f_in < 0)
-					exit_free("red_in_file_exists1");
+					exit_free("No such file or directory");
 				close(f_in);
 			}
 			else if (temp->type == HEREDOC)
 				use_heredoc(temp, TRUE);
 		}
 		else if (temp->type == CMND && temp->cmnd_path == NULL)
-			exit_free("red_in_file_exists2");
+			exit_free("command not found");
 		temp = temp->next;
 	}
 	return (last);
 }
 
-void	redirect_in(t_node *current)
+void	redirect_in(t_node *temp)
 {
 	int				f_in;
 	int				last_red;
 	char			*file;
-	t_node			*temp;
 
-	temp = current;
-	last_red = red_in_file_exists(current, &file);
+	last_red = red_in_file_exists(temp->head->current, &file);
 	while (temp && temp->type != PIPE)
 	{
-		if (temp->pos == last_red && is_cmnd(current))
+		if (temp->pos == last_red && is_cmnd(temp->head->current))
 		{
 			if (temp->type == RED_IN)
 			{
@@ -157,7 +155,7 @@ void	redirect_in(t_node *current)
 			else if (temp->type == HEREDOC)
 				use_heredoc(temp, FALSE);
 			else if (temp->type == CMND && temp->cmnd_path == NULL)
-				exit_free("redirect_in");
+				exit_free("command not found");
 		}
 		temp = temp->next;
 	}

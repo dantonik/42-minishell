@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/15 00:57:01 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/15 23:38:39 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,6 @@ static void	setup_dup2(t_node *temp, t_bool append)
 	temp->head->std_output[0] = 1;
 	if (dup2(f_out, STDOUT_FILENO) < 0)
 		perror("dup2");
-	// execve("/bin/ls", ft_split("ls", ' '), NULL);
-	// dup2(temp->std_out[1], 1);
-	// close(temp->std_out[1]);
 	close(f_out);
 }
 
@@ -104,11 +101,11 @@ static int	red_out_file_exists(t_node *current)
 			else if (temp->type == APPEND)
 				f_out = red_file(temp, TRUE);
 			if (f_out < 0)
-				exit_free("red_out_file_exists1");
+				exit_free("No such file or directory");
 			close(f_out);
 		}
 		else if (temp->type == CMND && temp->cmnd_path == NULL)
-			exit_free("red_out_file_exists2");
+			exit_free("command not found");
 		temp = temp->next;
 	}
 	return (last);
@@ -131,7 +128,7 @@ void	redirect_out(t_node *current)
 			else if (temp->type == APPEND)
 				setup_dup2(temp, TRUE);
 			else if (temp->type == CMND && temp->cmnd_path == NULL)
-				exit_free("redirect_out");
+				exit_free("command not found");
 		}
 		temp = temp->next;
 	}
