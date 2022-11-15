@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:13 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/13 23:52:47 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/14 23:47:38 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@
 # define MINISHELL "\033[1;93mtrash-3.2$ \033[0;39m"
 # define WRITE 1
 # define READ 0
-# define PIPE_IN_OUT 10
-
+# define P_BOTH 10
 
 //// BUILTINS
 void		check_builtins(t_head *head);

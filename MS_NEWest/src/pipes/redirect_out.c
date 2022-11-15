@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/12 00:21:04 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/15 00:57:01 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ static void	exit_free(char *err)
 	perror(err);
 	exit(EXIT_FAILURE);
 }
-
 
 int	last_red_in(t_node *temp)
 {

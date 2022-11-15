@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/12 00:20:58 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/15 00:18:43 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static t_bool	is_cmnd(t_node *current)
 	return (exists);
 }
 
-static void	exit_free(char *err)
+static int	exit_free(char *err)
 {
 	perror(err);
 	exit(EXIT_FAILURE);
@@ -78,9 +78,6 @@ static void	setup_dup2(t_node *temp, int first_param, int second_param)
 	temp->head->std_input[0] = 1;
 	if (dup2(first_param, second_param) < 0)
 		perror("dup2");
-	// execve("/bin/cat", ft_split("cat", ' '), NULL);
-	// dup2(temp->std_in[1], 0);
-	// close(temp->std_in[1]);
 }
 
 static void	use_heredoc(t_node *temp, t_bool just_print)

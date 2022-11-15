@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:16:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/14 23:21:35 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/14 23:48:35 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ typedef enum e_bool
 typedef struct Node
 {
 	char				*cmnd;
-	char				*cmnd_path;
 //..........................................
+	char				*cmnd_path;
 	int					pos;
 	int					here_fd[2];
 	struct linkedList	*head;
@@ -68,7 +68,6 @@ typedef struct linkedList
 	int				std_input[2];
 	int				std_output[2];
 // .......................................
-	int				cmnds;
 	struct Node		*head;
 	struct Node		*current;
 	struct Node		*tail;

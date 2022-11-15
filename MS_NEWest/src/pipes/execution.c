@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:22:15 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/14 23:10:31 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/15 01:45:55 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,25 +102,11 @@ void	fork_exec(t_node *temp, char **command)
 	if (pid == 0)
 	{
 		pipes_child(temp, command);
+		// built_in(command);
 		if (execve(temp->cmnd_path, command, NULL) == -1)
 			perror("fork\n");
 	}
 	pipes_parent(temp);
-}
-
-void	remake_in_out(t_node *temp)
-{
-
-	if (temp->head->std_input[0] == 1)
-	{
-		dup2(temp->head->std_input[1], 0);
-		temp->head->std_input[0] = 0;
-	}
-	if (temp->head->std_output[0] == 1)
-	{
-		dup2(temp->head->std_output[1], 1);
-		temp->head->std_input[0] = 0;
-	}
 }
 
 t_node	*execute(t_node *temp)
@@ -133,7 +119,16 @@ t_node	*execute(t_node *temp)
 		{
 			command = ft_split(temp->cmnd, ' ');
 			fork_exec(temp, command);
-			remake_in_out(temp);
+			if (temp->head->std_input[0] == 1)
+			{
+				dup2(temp->head->std_input[1], 0);
+				temp->head->std_input[0] = 0;
+			}
+			if (temp->head->std_output[0] == 1)
+			{
+				dup2(temp->head->std_output[1], 1);
+				temp->head->std_output[0] = 0;
+			}
 			my_free(command);
 		}
 		temp = temp->next;
