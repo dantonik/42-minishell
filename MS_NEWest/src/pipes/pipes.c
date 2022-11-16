@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 01:00:04 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/16 22:10:36 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/16 22:45:34 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 
 int	exec_funcs(t_node *temp)
 {
+	if (!temp->next || temp->next->type == PIPE)
+	{
+		close(temp->head->pipe_fd[READ]);
+		close(temp->head->pipe_fd[WRITE]);
+		return (exit_free("syntax error near unexpected token `|'"));
+	}
 	if (redirect_in(temp) == -1)
 	{
 		close(temp->head->pipe_fd[READ]);
