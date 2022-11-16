@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:22:15 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/16 01:28:52 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/16 22:09:57 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,35 @@ static char	*ft_join_path(char *s1, char connector, char *s2)
 	return (path);
 }
 
-void	validate(t_head *head, t_env_head *envp)
+void	valid_check(t_node *temp, char **paths, char **command)
+{
+	int		i;
+	char	*slash;
+	char	*path;
+
+	slash = ft_strchr(command[0], '/');
+	if (slash)
+	{
+		if (access(command[0], F_OK | X_OK) == 0)
+			temp->cmnd_path = ft_strdup(command[0]);
+		return ;
+	}
+	i = 0;
+	while (paths[i])
+	{
+		path = ft_join_path(paths[i], '/', command[0]);
+		if (access(path, F_OK | X_OK) == 0)
+			temp->cmnd_path = ft_strdup(path);
+		free(path);
+		i++;
+	}
+}
+
+void	validate(t_node *temp, t_env_head *envp)
 {
 	char			**command;
 	char			**paths;
-	char			*path;
-	t_node			*temp;
-	int				i;
 
-	temp = head->head;
 	while (temp)
 	{
 		if (temp->type == CMND)
@@ -74,15 +94,7 @@ void	validate(t_head *head, t_env_head *envp)
 			paths = split_paths(envp);
 			if (paths == NULL)
 				perror("validate");
-			i = 0;
-			while (paths[i])
-			{
-				path = ft_join_path(paths[i], '/', command[0]);
-				if (access(path, F_OK | X_OK) == 0)
-					temp->cmnd_path = ft_strdup(path);
-				free(path);
-				i++;
-			}
+			valid_check(temp, paths, command);
 			my_free(command);
 			my_free(paths);
 		}

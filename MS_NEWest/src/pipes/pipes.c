@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 01:00:04 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/16 01:33:27 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/16 22:10:36 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	main_loop(t_head *head, t_env_head *envp)
 	head->current = head->head;
 	if (head->current->type == PIPE)
 		return (exit_free("syntax error near unexpected token `|'"));
-	validate(head, envp);
+	validate(head->current, envp);
 	while (head->current)
 	{
 		if (pipe(head->pipe_fd) == -1)
