@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/15 23:38:44 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/16 01:32:19 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ static t_bool	is_cmnd(t_node *current)
 	return (exists);
 }
 
-static int	exit_free(char *err)
+int	exit_free(char *err)
 {
-	perror(err);
-	exit(EXIT_FAILURE);
+	printf("trash: %s\n", err);
+	return (-1);
 }
 
 static int	last_red_in(t_node *temp)
@@ -51,11 +51,16 @@ static int	last_red_in(t_node *temp)
 
 static int	red_file(t_node *temp, t_bool heredoc, char **file)
 {
-	int	f_in;
-	int	space;
+	int		f_in;
+	int		space;
+	char	*temp_file;
 
+	temp_file = NULL;
 	if (heredoc == FALSE)
+	{
+		file = &temp_file;
 		space = 1;
+	}
 	else
 		space = 2;
 	if (temp->cmnd[space] == ' ')
@@ -73,11 +78,14 @@ static int	red_file(t_node *temp, t_bool heredoc, char **file)
 	return (0);
 }
 
-static void	setup_dup2(t_node *temp, int first_param, int second_param)
+static int	setup_dup2(t_node *temp, int first_param, int second_param)
 {
+	if (first_param < 0)
+		return (-1);
 	temp->head->std_input[0] = 1;
 	if (dup2(first_param, second_param) < 0)
 		perror("dup2");
+	return (0);
 }
 
 static void	use_heredoc(t_node *temp, t_bool just_print)
@@ -106,57 +114,60 @@ static void	use_heredoc(t_node *temp, t_bool just_print)
 	free(input);
 }
 
-static int	red_in_file_exists(t_node *current, char **file)
+static int	red_in_file_exists(t_node *curr)
 {
 	t_node			*temp;
 	int				f_in;
 	int				last;
 
-	temp = current;
+	temp = curr;
 	last = last_red_in(temp);
-	while (temp && temp->type != PIPE && (temp->pos < last || !is_cmnd(current)))
+	while (temp && temp->type != PIPE && (temp->pos < last || !is_cmnd(curr)))
 	{
 		if ((temp->type == RED_IN || temp->type == HEREDOC))
 		{
 			if (temp->type == RED_IN)
 			{
-				f_in = red_file(temp, FALSE, file);
+				f_in = red_file(temp, FALSE, NULL);
 				if (f_in < 0)
-					exit_free("No such file or directory");
+					return (exit_free("No such file or directory"));
 				close(f_in);
 			}
 			else if (temp->type == HEREDOC)
 				use_heredoc(temp, TRUE);
 		}
 		else if (temp->type == CMND && temp->cmnd_path == NULL)
-			exit_free("command not found");
+			return (exit_free("command not found"));
 		temp = temp->next;
 	}
 	return (last);
 }
 
-void	redirect_in(t_node *temp)
+int	redirect_in(t_node *temp)
 {
 	int				f_in;
 	int				last_red;
-	char			*file;
 
-	last_red = red_in_file_exists(temp->head->current, &file);
+	last_red = red_in_file_exists(temp->head->current);
+	if (last_red == -1)
+		return (-1);
 	while (temp && temp->type != PIPE)
 	{
 		if (temp->pos == last_red && is_cmnd(temp->head->current))
 		{
 			if (temp->type == RED_IN)
 			{
-				f_in = red_file(temp, FALSE, &file);
-				setup_dup2(temp, f_in, STDIN_FILENO);
+				f_in = red_file(temp, FALSE, NULL);
+				if (setup_dup2(temp, f_in, STDIN_FILENO) == -1)
+					return (exit_free("No such file or directory"));
 				close(f_in);
 			}
 			else if (temp->type == HEREDOC)
 				use_heredoc(temp, FALSE);
 			else if (temp->type == CMND && temp->cmnd_path == NULL)
-				exit_free("command not found");
+				return (exit_free("command not found"));
 		}
 		temp = temp->next;
 	}
+	return (0);
 }

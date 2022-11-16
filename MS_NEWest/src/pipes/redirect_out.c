@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/15 23:38:39 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/16 01:32:40 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,6 @@ static t_bool	is_cmnd(t_node *current)
 		temp = temp->next;
 	}
 	return (exists);
-}
-
-static void	exit_free(char *err)
-{
-	perror(err);
-	exit(EXIT_FAILURE);
 }
 
 int	last_red_in(t_node *temp)
@@ -84,15 +78,15 @@ static void	setup_dup2(t_node *temp, t_bool append)
 	close(f_out);
 }
 
-static int	red_out_file_exists(t_node *current)
+static int	red_out_file_exists(t_node *curr)
 {
 	t_node			*temp;
 	int				f_out;
 	int				last;
 
-	temp = current;
+	temp = curr;
 	last = last_red_in(temp);
-	while (temp && temp->type != PIPE && (temp->pos < last || !is_cmnd(current)))
+	while (temp && temp->type != PIPE && (temp->pos < last || !is_cmnd(curr)))
 	{
 		if (temp->type == RED_OUT || temp->type == APPEND)
 		{
@@ -101,17 +95,17 @@ static int	red_out_file_exists(t_node *current)
 			else if (temp->type == APPEND)
 				f_out = red_file(temp, TRUE);
 			if (f_out < 0)
-				exit_free("No such file or directory");
+				return (exit_free("No such file or directory"));
 			close(f_out);
 		}
 		else if (temp->type == CMND && temp->cmnd_path == NULL)
-			exit_free("command not found");
+			return (exit_free("command not found"));
 		temp = temp->next;
 	}
 	return (last);
 }
 
-void	redirect_out(t_node *current)
+int	redirect_out(t_node *current)
 {
 	t_node			*temp;
 	int				f_out;
@@ -119,6 +113,8 @@ void	redirect_out(t_node *current)
 
 	temp = current;
 	last_red = red_out_file_exists(current);
+	if (last_red == -1)
+		return (-1);
 	while (temp && temp->type != PIPE)
 	{
 		if (temp->pos == last_red && is_cmnd(current))
@@ -128,8 +124,9 @@ void	redirect_out(t_node *current)
 			else if (temp->type == APPEND)
 				setup_dup2(temp, TRUE);
 			else if (temp->type == CMND && temp->cmnd_path == NULL)
-				exit_free("command not found");
+				return (exit_free("command not found"));
 		}
 		temp = temp->next;
 	}
+	return (0);
 }

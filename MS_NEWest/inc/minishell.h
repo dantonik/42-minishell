@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:13 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/14 23:47:38 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/16 01:32:30 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,14 @@ void		printl(t_head *head);
 void		free_list_loop(t_head **a);
 
 //// PIPES
-void		redirect_in(t_node *head);
-void		redirect_out(t_node *head);
+int			redirect_in(t_node *head);
+int			redirect_out(t_node *head);
 void		validate(t_head *head, t_env_head *envp);
 t_node		*execute(t_node *head);
 void		pipes_child(t_node *temp, char **command);
 void		pipes_parent(t_node *temp);
-void		main_loop(t_head *head, t_env_head *envp);
+int			main_loop(t_head *head, t_env_head *envp);
 int			pipe_in_out(t_node *current);
+int			exit_free(char *err);
 
 #endif

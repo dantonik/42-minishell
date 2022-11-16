@@ -6,11 +6,29 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/15 23:00:04 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/16 01:55:46 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+static int	check_empty_input(char *input)
+{
+	int	i;
+
+	i = 0;
+	while (1)
+	{
+		if (input[i] == ' ' || input[i] == '\n' || input[i] == '\t')
+			i++;
+		else
+			break ;
+	}
+	if (input[i] == '\0')
+		return (1);
+	else
+		return (0);
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -41,10 +59,13 @@ int	main(int argc, char **argv, char **envp)
 	{
 		input = NULL;
 		input = readline(MINISHELL);
-		if (input)
+		if (check_empty_input(input))
+			continue ;
+		else
 			add_history(input);
 		head->length = 0;
 		head->temp_fd = -1;
+		head->envp_og = envp;
 		create_list(&head, input);
 		check_builtins(head);
 		main_loop(head, env_head);

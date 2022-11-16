@@ -6,15 +6,35 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 01:00:04 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/15 23:36:28 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/16 01:33:27 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	main_loop(t_head *head, t_env_head *envp)
+int	exec_funcs(t_node *temp)
+{
+	if (redirect_in(temp) == -1)
+	{
+		close(temp->head->pipe_fd[READ]);
+		close(temp->head->pipe_fd[WRITE]);
+		return (-1);
+	}
+	if (redirect_out(temp) == -1)
+	{
+		close(temp->head->pipe_fd[READ]);
+		close(temp->head->pipe_fd[WRITE]);
+		return (-1);
+	}
+	temp->head->current = execute(temp);
+	return (0);
+}
+
+int	main_loop(t_head *head, t_env_head *envp)
 {
 	head->current = head->head;
+	if (head->current->type == PIPE)
+		return (exit_free("syntax error near unexpected token `|'"));
 	validate(head, envp);
 	while (head->current)
 	{
@@ -22,22 +42,18 @@ void	main_loop(t_head *head, t_env_head *envp)
 			perror(MINISHELL);
 		if (head->current->type == PIPE)
 		{
-			redirect_in(head->current->next);
-			redirect_out(head->current->next);
-			head->current = execute(head->current->next);
+			if (exec_funcs(head->current->next) == -1)
+				return (-1);
 		}
-		else
-		{
-			redirect_in(head->current);
-			redirect_out(head->current);
-			head->current = execute(head->current);
-		}
+		else if (exec_funcs(head->current) == -1)
+			return (-1);
 	}
 	while (head->cnt_pid > 0)
 	{
 		waitpid(0, &(head->pid), 0);
 		head->cnt_pid--;
 	}
+	return (0);
 }
 
 int	pipe_in_out(t_node *current)
