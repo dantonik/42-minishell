@@ -6,34 +6,38 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 01:00:04 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/16 22:45:34 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/17 02:56:52 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	exec_funcs(t_node *temp)
+static int	exec_funcs(t_node *temp, t_head *head, t_bool pipe)
 {
-	if (!temp->next || temp->next->type == PIPE)
+	int	res;
+
+	res = 0;
+	if (pipe)
 	{
-		close(temp->head->pipe_fd[READ]);
-		close(temp->head->pipe_fd[WRITE]);
-		return (exit_free("syntax error near unexpected token `|'"));
+		if (temp == NULL)
+			res = -1;
+		else if (temp->type == PIPE)
+			res = -1;
+		if (res == -1)
+			printf("syntax error near unexpected token `|'\n");
 	}
-	if (redirect_in(temp) == -1)
+	if (res != -1)
+		res = redirect_in(temp);
+	if (res != -1)
+		res = redirect_out(temp);
+	if (res != -1)
+		temp->head->current = execute(temp);
+	else
 	{
-		close(temp->head->pipe_fd[READ]);
-		close(temp->head->pipe_fd[WRITE]);
-		return (-1);
+		close(head->pipe_fd[READ]);
+		close(head->pipe_fd[WRITE]);
 	}
-	if (redirect_out(temp) == -1)
-	{
-		close(temp->head->pipe_fd[READ]);
-		close(temp->head->pipe_fd[WRITE]);
-		return (-1);
-	}
-	temp->head->current = execute(temp);
-	return (0);
+	return (res);
 }
 
 int	main_loop(t_head *head, t_env_head *envp)
@@ -48,10 +52,10 @@ int	main_loop(t_head *head, t_env_head *envp)
 			perror(MINISHELL);
 		if (head->current->type == PIPE)
 		{
-			if (exec_funcs(head->current->next) == -1)
+			if (exec_funcs(head->current->next, head, TRUE) == -1)
 				return (-1);
 		}
-		else if (exec_funcs(head->current) == -1)
+		else if (exec_funcs(head->current, head, FALSE) == -1)
 			return (-1);
 	}
 	while (head->cnt_pid > 0)
