@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:38:05 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/11 21:28:30 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/21 21:44:20 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	add_token_tail(t_head **head, char *str, int type)
 	new->cmnd_path = NULL;
 	new->head = (*head);
 	new->pos = (*head)->length;
+	// new->pos = 1;
 	current = (*head)->head;
 	if ((*head)->head == NULL)
 	{
@@ -38,6 +39,10 @@ void	add_token_tail(t_head **head, char *str, int type)
 	}
 	while (current->next != NULL)
 		current = current->next;
+	// {
+	// 	new->pos++;
+	// 	current = current->next;
+	// }
 	current->next = new;
 	new->prev = current;
 	(*head)->tail = new;

@@ -6,7 +6,7 @@
 #    By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/24 22:05:24 by dantonik          #+#    #+#              #
-#    Updated: 2022/11/12 21:56:45 by cboubour         ###   ########.fr        #
+#    Updated: 2022/11/21 21:56:12 by cboubour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ AUTHORS = dantonik, cboubour
 DATE = $$(date +%Y/%m/%d)
 
 CC = cc
-FLAGS = -O2 -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror
 HEADERS = -I ./include -I $(LIBMLX)/include -I $(LIBFT)
 LIBFT = ./lib/libft
 OBJDIR = obj
@@ -25,7 +25,9 @@ DLDIR = DL
 LIBA = ./lib/libft/libft.a
 SRC = main.c \
 	builtins/builtins.c \
-	env/env_vars.c \
+	builtins/env_vars.c \
+	env/env_ll.c \
+	expander/expander.c \
 	lexer/lexer.c \
 	lexer/lexer_ll.c \
 	lexer/handle_string.c \
@@ -34,7 +36,9 @@ SRC = main.c \
 	pipes/redirect_in.c \
 	pipes/redirect_out.c \
 	pipes/execution.c \
-	pipes/pipes.c
+	pipes/pipes.c \
+	string_builder/stringbuilder.c \
+	string_builder/stringbuilder_utils.c
 
 VPATH = src
 
@@ -60,7 +64,7 @@ all: $(NAME)
 # $(OBJDIR)/%.o: %.c | $(OBJDIR)
 # 	@$(CC) $(INCREADH) -c $^ -o $@
 $(OBJDIR)/%.o: %.c | $(OBJDIR)
-	@$(CC) $(INCLUDES) -c $^ -o $@
+	@$(CC) $(INCLUDES) -MMD -MP -c $^ -o $@
 
 $(OBJDIR):
 	@mkdir -p $(OBJDIR)
@@ -69,6 +73,8 @@ $(OBJDIR):
 	@mkdir -p obj/builtins
 	@mkdir -p obj/linked_list
 	@mkdir -p obj/pipes
+	@mkdir -p obj/expander
+	@mkdir -p obj/string_builder
 
 # $(NAME): $(OBJ) $(LIBFT) inc/minishell.h
 # 	gcc $(FLAGS) $(OBJ) $(LIBFT) $(READLINE) $(INCREADL) $(LIBRARY) -o $(NAME)

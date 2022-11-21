@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:07:35 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/03 00:17:44 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/21 21:40:21 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,15 @@
 char	*add_until(t_head **head, char *input, int x, int type)
 {
 	int		i;
+	char	*str;
 
 	i = x;
 	while (input[i] != '\0' && input[i] == ' ')
 		i++;
 	while (input[i] != '\0' && (!ms_ispipe(input[i])) && input[i] != ' ')
 		i++;
-	add_token_tail(head, ms_strdup(input, i), type);
+	str = ms_strdup(input, i);
+	add_token_tail(head, str, type);
 	return (input + i);
 }
 

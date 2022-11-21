@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:16:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/16 01:28:23 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/21 21:35:07 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,10 @@ typedef struct Node
 		SQ,
 		DQ
 	} type;
-	int					length;
-	struct Node			*next;
-	struct Node			*prev;
+	t_bool			echo_n;
+	int				length;
+	struct Node		*next;
+	struct Node		*prev;
 }				t_node;
 
 typedef struct linkedList
@@ -89,5 +90,11 @@ typedef struct linkedListEnv
 	struct NodeEnv	*head;
 	struct NodeEnv	*tail;
 }				t_env_head;
+
+typedef struct s_stringbuilder
+{
+	char	*str;
+	int		len;
+}	t_stringbuilder;
 
 #endif
