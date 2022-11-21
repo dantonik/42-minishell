@@ -5,12 +5,84 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/08 20:34:25 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/09 03:31:20 by dantonik         ###   ########.fr       */
+/*   Created: 2022/11/02 20:45:07 by dantonik          #+#    #+#             */
+/*   Updated: 2022/11/07 20:56:26 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+
+// char	*expander(char *s, t_env_head *head)
+// {
+// 	int			i;
+// 	int			j;
+// 	int			exp;
+// 	bool		sq[3];
+// 	char		*new;zv               
+// 	char		*temp;
+// 	t_env_node	*cur;
+
+// 	i = 0;
+// 	j = 0;
+// 	sq[0] = false;
+// 	sq[1] = false;
+// 	sq[2] = false;
+// 	while (s[i] != '\0')
+// 	{
+// 		if (s[i] == '\'')
+// 			sq[0] = !sq[0];
+// 		if (s[i] == '"')
+// 			sq[1] = !sq[1];
+// 		if (sq[0] == false && sq[1] == false && s[i] == '$')
+// 		{
+// 			i++;
+// 			j = 0;
+// 			while (s[i + j] != '\0' && s[i + j] != ' ' && !(ms_ispipe(s[i + j])))
+// 				j++;
+// 			temp = ms_strdup(&s[i], j);
+// 			cur = head->head;
+// 			while (cur->next != NULL)
+// 			{
+// 				// if (ms_strcmp_exact(temp, cur->key))
+// 				// 	printf("%s\n", cur->key);
+// 				cur = cur->next;
+// 			}
+// 			i--;
+// 		}
+// 		new[i] = s[i];
+// 		i = i + 1;
+// 	}
+// 	new[i] = '\0';
+// 	return (s);
+// }
+
+char	*ms_chrjoin(char *s1, char s2)
+{
+	int		i;
+	int		j;
+	char	*str;
+
+	if (s1 == NULL)
+	{
+		str = (char *)malloc(2 * sizeof(char));
+		str[0] = s2;
+		str[1] = '\0';
+		return (str);
+	}
+	str = (char *)malloc((ft_strlen(s1) + 2) * sizeof(char));
+	if (str == NULL)
+		return (NULL);
+	i = 0;
+	while (s1[i] != '\0')
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	str[i] = s2;
+	str[i + 1] = '\0';
+	// free(s1);
+	return (str);
+}
 
 char	*ms_strjoin(char *s1, char *s2)
 {
@@ -37,6 +109,7 @@ char	*ms_strjoin(char *s1, char *s2)
 		j++;
 	}
 	str[i] = '\0';
+	// free(s1);
 	return (str);
 }
 
@@ -57,13 +130,12 @@ char	*check_var(char *s, t_env_head *head)
 		if (ms_strcmp_exact(temp->key, var) == 0)
 		{
 			s = ms_strjoin(s, temp->value);
-			free (var);
-			return (temp->value);
+			return (s + i);
 		}
 		temp = temp->next;
 	}
 	free(var);
-	return (NULL);
+	return (s);
 }
 
 char	*expander(char *s, t_env_head *head)
@@ -72,11 +144,10 @@ char	*expander(char *s, t_env_head *head)
 	char	*new;
 	char	*temp;
 	int		i;
-	t_stringbuilder	*sb;
 
-	sb = sb_create();
 	q[0] = false;
 	q[1] = false;
+	new = NULL;
 	while (*s != '\0')
 	{
 		if (*s == '\''&& q[1] == false)
@@ -86,15 +157,14 @@ char	*expander(char *s, t_env_head *head)
 		if (*s == '$' && q[0] == false)
 		{
 			new = check_var(s, head);
-			if (new)
-				sb_append_str(sb, new);
 			while (*s != '\0' && *s != ' ' && !ms_ispipe(*s))
 				s++;
 		}
-		sb_append_char(sb, *s);
+		new = ms_chrjoin(new, *s);
+		printf("%c\n", *s);
 		s++;
 	}
-	new = sb_get_str(sb);
-	sb_destroy(sb);
+	printf("\n");
+	printf("expander: %s\n", new);
 	return (new);
 }

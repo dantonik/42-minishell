@@ -6,7 +6,7 @@
 /*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:07:35 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/02 14:21:51 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/03 00:13:57 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,15 @@
 char	*add_until(t_head **head, char *input, int x, int type)
 {
 	int		i;
+	char	*str;
 
 	i = x;
 	while (input[i] != '\0' && input[i] == ' ')
 		i++;
-	while (input[i] != '\0' && (!ms_ispipe(input[i])))
+	while (input[i] != '\0' && (!ms_ispipe(input[i])) && input[i] != ' ')
 		i++;
-	add_token_tail(head, ms_strdup(input, i), type);
+	str = ms_strdup(input, i);
+	add_token_tail(head, str, type);
 	return (input + i);
 }
 
@@ -43,16 +45,21 @@ char	*add_pipe(t_head **head, char *input)
 char	*add_cmnd(t_head **head, char *input)
 {
 	int		i;
+	int		j;
 	char	*s;
 
+	j = 0;
 	i = 0;
-	while (input[i] != '\0' && input[i] == ' ')
+	while (input[j] != '\0' && input[j] == ' ')
+		j++;
+	while (input[j + i] != '\0' && (!ms_ispipe(input[j + i])))
 		i++;
-	while (input[i] != '\0' && (!ms_ispipe(input[i])))
-		i++;
-	s = ms_strdup(input, i);
-	add_token_tail(head, ms_strdup(input, i), CMND);
-	return (input + i);
+	if (i > 0)
+	{
+		s = ms_strdup(input, j + i);
+		add_token_tail(head, s, CMND);
+	}
+	return (input + j + i);
 }
 
 char	*create_token(t_head **head, char *input)

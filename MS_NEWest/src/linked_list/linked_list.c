@@ -6,7 +6,7 @@
 /*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:38:05 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/02 15:06:55 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/02 23:40:02 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	add_token_tail(t_head **head, char *str, int type)
 	new->cmnd = str;
 	new->type = type;
 	new->next = NULL;
+	new->pos = 1;
 	current = (*head)->head;
 	if ((*head)->head == NULL)
 	{
@@ -34,7 +35,10 @@ void	add_token_tail(t_head **head, char *str, int type)
 		return ;
 	}
 	while (current->next != NULL)
+	{
+		new->pos++;
 		current = current->next;
+	}
 	current->next = new;
 	new->prev = current;
 	(*head)->tail = new;
@@ -65,8 +69,8 @@ void	printl(t_head *head)
 	current = head->head;
 	while (current != NULL)
 	{
-		printf("___%s___\t[type:%u]\t[builtin:%u]\n", \
-			current->cmnd, current->type, current->t_builtin);
+		printf("___%s___\t[pos:%i]\t[type:%u]\t[builtin:%u]\n", \
+			current->cmnd, current->pos, current->type, current->t_builtin);
 		current = current->next;
 	}
 }

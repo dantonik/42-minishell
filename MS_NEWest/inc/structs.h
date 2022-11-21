@@ -6,7 +6,7 @@
 /*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:16:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/10/25 00:18:20 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/09 03:57:26 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef enum e_bool
 typedef struct Node
 {
 	char			*cmnd;
+	int				pos;
 	t_bool			invalid;
 	enum
 	{
@@ -47,6 +48,7 @@ typedef struct Node
 		SQ,
 		DQ
 	} type;
+	t_bool			echo_n;
 	int				length;
 	struct Node		*next;
 	struct Node		*prev;
@@ -76,5 +78,11 @@ typedef struct linkedListEnv
 	struct NodeEnv	*head;
 	struct NodeEnv	*tail;
 }				t_env_head;
+
+typedef struct s_stringbuilder
+{
+	char	*str;
+	int		len;
+}	t_stringbuilder;
 
 #endif

@@ -6,7 +6,7 @@
 #    By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/24 22:05:24 by dantonik          #+#    #+#              #
-#    Updated: 2022/11/02 14:59:31 by dantonik         ###   ########.fr        #
+#    Updated: 2022/11/09 00:31:57 by dantonik         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,12 +25,16 @@ DLDIR = DL
 LIBA = ./lib/libft/libft.a
 SRC = main.c \
 	builtins/builtins.c \
-	env/env_vars.c \
+	builtins/env_vars.c \
+	env/env_ll.c \
+	expander/expander.c \
 	lexer/lexer.c \
 	lexer/lexer_ll.c \
 	lexer/handle_string.c \
 	lexer/string_utils.c \
-	linked_list/linked_list.c
+	linked_list/linked_list.c \
+	string_builder/stringbuilder.c \
+	string_builder/stringbuilder_utils.c
 
 VPATH = src
 
@@ -56,7 +60,7 @@ all: $(NAME)
 # $(OBJDIR)/%.o: %.c | $(OBJDIR)
 # 	@$(CC) $(INCREADH) -c $^ -o $@
 $(OBJDIR)/%.o: %.c | $(OBJDIR)
-	@$(CC) $(INCLUDES) -c $^ -o $@
+	@$(CC) $(INCLUDES) -MMD -MP -c $^ -o $@
 
 $(OBJDIR):
 	@mkdir -p $(OBJDIR)
@@ -64,6 +68,8 @@ $(OBJDIR):
 	@mkdir -p obj/env
 	@mkdir -p obj/builtins
 	@mkdir -p obj/linked_list
+	@mkdir -p obj/expander
+	@mkdir -p obj/string_builder
 
 # $(NAME): $(OBJ) $(LIBFT) inc/minishell.h
 # 	gcc $(FLAGS) $(OBJ) $(LIBFT) $(READLINE) $(INCREADL) $(LIBRARY) -o $(NAME)

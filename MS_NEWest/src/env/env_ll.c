@@ -1,16 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_vars.c                                         :+:      :+:    :+:   */
+/*   env_ll.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:25:15 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/02 14:31:41 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/09 03:10:38 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+
+void	printl_export(t_env_head *head)
+{
+	t_env_node	*current;
+	int			i;
+
+	i = 0;
+	if (head == NULL)
+		return ;
+	current = head->head;
+	while (current != NULL)
+	{
+		if (current->value != NULL)
+			printf("declare -x %s=\"%s\"\n", current->key, current->value);
+		else if (ft_strlen(current->key) > 0)
+			printf("declare -x %s\n", current->key);
+		i++;
+		current = current->next;
+	}
+}
 
 void	printl_env(t_env_head *head)
 {
@@ -23,7 +43,8 @@ void	printl_env(t_env_head *head)
 	current = head->head;
 	while (current != NULL)
 	{
-		printf("%s=%s\n", current->key, current->value);
+		if (current->value != NULL)
+			printf("%s=%s\n", current->key, current->value);
 		i++;
 		current = current->next;
 	}
