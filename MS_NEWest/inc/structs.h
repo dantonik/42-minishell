@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:16:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/21 21:35:07 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/21 23:15:00 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,23 +58,6 @@ typedef struct Node
 	struct Node		*prev;
 }				t_node;
 
-typedef struct linkedList
-{
-	int				length;
-// .......................................
-	int				pid;
-	int				cnt_pid;
-	int				temp_fd;
-	int				pipe_fd[2];
-	int				std_input[2];
-	int				std_output[2];
-	char			**envp_og;
-// .......................................
-	struct Node		*head;
-	struct Node		*current;
-	struct Node		*tail;
-}				t_head;
-
 typedef struct NodeEnv
 {
 	char			*key;
@@ -90,6 +73,24 @@ typedef struct linkedListEnv
 	struct NodeEnv	*head;
 	struct NodeEnv	*tail;
 }				t_env_head;
+
+typedef struct linkedList
+{
+	int				length;
+// .......................................
+	int				pid;
+	int				cnt_pid;
+	int				temp_fd;
+	int				pipe_fd[2];
+	int				std_input[2];
+	int				std_output[2];
+	char			**envp_og;
+	t_env_head		*envp_ours;
+// .......................................
+	struct Node		*head;
+	struct Node		*current;
+	struct Node		*tail;
+}				t_head;
 
 typedef struct s_stringbuilder
 {

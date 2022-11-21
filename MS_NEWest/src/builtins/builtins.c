@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:41:01 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/21 21:39:21 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/21 23:13:13 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,23 @@ void	check_builtins(t_head *head)
 			current->t_builtin = T_EXIT;
 		current = current->next;
 	}
+}
+
+void	built_in(t_env_head *envp, t_node *current)
+{
+	dprintf(2, "running builtins..\n");
+	if (current->t_builtin == T_ECHO)
+		ft_echo(current, current->cmnd);
+	if (current->t_builtin == T_CD)
+		dprintf(2, "cd()");
+	if (current->t_builtin == T_PWD)
+		dprintf(2, "pwd()");
+	if (current->t_builtin == T_EXPORT)
+		ft_export(&envp, current->cmnd);
+	if (current->t_builtin == T_UNSET)
+		ft_unset(&envp, current->cmnd);
+	if (current->t_builtin == T_ENV)
+		ft_env(envp);
+	if (current->t_builtin == T_EXIT)
+		dprintf(2, "exit()");
 }

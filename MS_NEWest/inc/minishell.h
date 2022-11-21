@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:13 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/21 21:23:45 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/21 23:05:39 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # define P_BOTH 10
 
 //// BUILTINS
+void		built_in(t_env_head *envp, t_node *current);
 void		ft_echo(t_node *head, char *s);
 void		check_builtins(t_head *head);
 // ENV VARS

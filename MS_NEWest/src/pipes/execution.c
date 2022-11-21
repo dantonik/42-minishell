@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:22:15 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/16 22:09:57 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/21 22:43:32 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,12 @@ void	fork_exec(t_node *temp, char **command)
 	if (pid == 0)
 	{
 		pipes_child(temp, command);
-		// built_in(command);
-		if (execve(temp->cmnd_path, command, temp->head->envp_og) == -1)
+		if (temp->t_builtin != 0)
+		{
+			built_in(temp->head->envp_ours, temp);
+			exit(EXIT_SUCCESS);
+		}
+		else if (execve(temp->cmnd_path, command, temp->head->envp_og) == -1)
 			perror("fork\n");
 	}
 	pipes_parent(temp);

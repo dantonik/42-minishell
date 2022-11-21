@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/21 22:03:59 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/21 22:40:40 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int	main(int argc, char **argv, char **envp)
 		head->length = 0;
 		head->temp_fd = -1;
 		head->envp_og = envp;
+		head->envp_ours = env_head;
 		create_list(&head, input);
 		check_builtins(head);
 		main_loop(head, env_head);
