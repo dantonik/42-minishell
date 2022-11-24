@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/24 03:11:54 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/24 20:23:29 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,10 @@ int	main(int argc, char **argv, char **envp)
 		if (!input)
 			break ;
 		if (check_empty_input(input))
+		{
+			free(input);
 			continue ;
+		}
 		else
 			add_history(input);
 		// input = expander(input, env_head);
