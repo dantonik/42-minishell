@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:38:05 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/21 21:44:20 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/24 01:15:26 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ void	free_list_loop(t_head **a)
 	while (temp != NULL)
 	{
 		(*a)->head = (*a)->head->next;
+		free (temp->cmnd);
+		free (temp->cmnd_path);
 		free (temp);
 		temp = (*a)->head;
 	}

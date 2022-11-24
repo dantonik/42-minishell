@@ -6,7 +6,7 @@
 #    By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/24 22:05:24 by dantonik          #+#    #+#              #
-#    Updated: 2022/11/21 21:56:12 by cboubour         ###   ########.fr        #
+#    Updated: 2022/11/22 21:05:40 by cboubour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,8 @@ LIBA = ./lib/libft/libft.a
 SRC = main.c \
 	builtins/builtins.c \
 	builtins/env_vars.c \
+	builtins/ft_cd.c \
+	builtins/ft_pwd.c \
 	env/env_ll.c \
 	expander/expander.c \
 	lexer/lexer.c \

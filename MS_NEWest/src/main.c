@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/21 22:40:40 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/24 03:11:54 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,41 @@ static int	check_empty_input(char *input)
 		return (0);
 }
 
+void	free_list_env(t_env_head **a)
+{
+	t_env_node	*temp;
+
+	temp = (*a)->head;
+	while (temp != NULL)
+	{
+		(*a)->head = (*a)->head->next;
+		free (temp->key);
+		free (temp->value);
+		free (temp);
+		temp = (*a)->head;
+	}
+	(*a)->head = NULL;
+}
+
+char	**path_str(t_env_head *envp)
+{
+	char		**paths;
+	t_env_node	*current;
+	int			i;
+
+	paths = ft_calloc(envp->length, sizeof(char *));
+	i = 0;
+	current = envp->head;
+	while (current != NULL)
+	{
+		paths[i] = ft_strjoin(current->key, current->value);
+		current = current->next;
+		i++;
+	}
+	paths[i] = NULL;
+	return (paths);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char		*input;
@@ -56,7 +91,7 @@ int	main(int argc, char **argv, char **envp)
 		printf("trash: %s: No such file or directory\n", argv[1]);
 		return (EXIT_FAILURE);
 	}
-	if (envp[0] == NULL)
+	if (envp == NULL || envp[0] == NULL)
 	{
 		printf("trash: send the environment please!\n");
 		return (EXIT_FAILURE);
@@ -76,14 +111,15 @@ int	main(int argc, char **argv, char **envp)
 	{
 		input = NULL;
 		input = readline(MINISHELL);
+		if (!input)
+			break ;
 		if (check_empty_input(input))
 			continue ;
 		else
 			add_history(input);
-		input = expander(input, env_head);
+		// input = expander(input, env_head);
 		head->length = 0;
 		head->temp_fd = -1;
-		head->envp_og = envp;
 		head->envp_ours = env_head;
 		create_list(&head, input);
 		check_builtins(head);
@@ -94,6 +130,13 @@ int	main(int argc, char **argv, char **envp)
 	}
 	close(head->std_input[1]);
 	close(head->std_output[1]);
+	free_list_loop(&head);
+	free_list_env(&env_head);
+	// my_free(head->envp_char);
 	free(head);
+	if (input)
+		free (input);
+	rl_clear_history();
+	system("leaks minishell");
 	return (0);
 }

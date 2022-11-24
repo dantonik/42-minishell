@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:13 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/21 23:05:39 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/24 03:06:30 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <unistd.h>
 # include <stdbool.h>
 # include <sys/wait.h>
+# include <sys/param.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
@@ -29,9 +30,11 @@
 # define P_BOTH 10
 
 //// BUILTINS
-void		built_in(t_env_head *envp, t_node *current);
+void		built_in(t_env_head *envp, t_node *current, t_bool forked);
 void		ft_echo(t_node *head, char *s);
 void		check_builtins(t_head *head);
+int			ft_cd(t_node *temp);
+int			ft_pwd(void);
 // ENV VARS
 void		ft_env(t_env_head *head);
 void		ft_export(t_env_head **head, char *cmnd);
@@ -83,7 +86,9 @@ void		pipes_child(t_node *temp, char **command);
 void		pipes_parent(t_node *temp);
 int			main_loop(t_head *head, t_env_head *envp);
 int			pipe_in_out(t_node *current);
-int			exit_free(char *err);
+int			ret(char *err, t_bool perr, int fd);
+void		my_free(char **arr);
+char		**path_str(t_env_head *envp);
 
 //// STRING BUILDER
 t_stringbuilder	*sb_create(void);

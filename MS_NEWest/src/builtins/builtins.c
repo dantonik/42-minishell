@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:41:01 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/21 23:13:13 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/24 01:10:31 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ char	*check_echo_flag(t_node *node, char *s)
 			s += 2;
 		}
 		else
+		{
+			my_free(str);
 			return (s);
+		}
 		while (str[i][j] && str[i][j] == 'n')
 		{
 			j++;
@@ -40,6 +43,7 @@ char	*check_echo_flag(t_node *node, char *s)
 		if (*s && *s == ' ')
 			s++;
 	}
+	my_free(str);
 	return (s);
 }
 
@@ -96,15 +100,15 @@ void	check_builtins(t_head *head)
 	}
 }
 
-void	built_in(t_env_head *envp, t_node *current)
+void	built_in(t_env_head *envp, t_node *current, t_bool forked)
 {
-	dprintf(2, "running builtins..\n");
+	// printf("running builtins..\n");
 	if (current->t_builtin == T_ECHO)
 		ft_echo(current, current->cmnd);
 	if (current->t_builtin == T_CD)
-		dprintf(2, "cd()");
+		ft_cd(current);
 	if (current->t_builtin == T_PWD)
-		dprintf(2, "pwd()");
+		ft_pwd();
 	if (current->t_builtin == T_EXPORT)
 		ft_export(&envp, current->cmnd);
 	if (current->t_builtin == T_UNSET)
@@ -113,4 +117,8 @@ void	built_in(t_env_head *envp, t_node *current)
 		ft_env(envp);
 	if (current->t_builtin == T_EXIT)
 		dprintf(2, "exit()");
+	if (forked)
+		exit(EXIT_SUCCESS);
+	else
+		return ;
 }

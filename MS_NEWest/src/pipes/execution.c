@@ -6,13 +6,13 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:22:15 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/21 22:43:32 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/24 03:05:14 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static void	my_free(char **arr)
+void	my_free(char **arr)
 {
 	int	i;
 
@@ -33,17 +33,19 @@ static char	**split_paths(t_env_head *envp)
 	char		**paths;
 	t_env_node	*current;
 
+	paths = NULL;
 	current = envp->head;
 	while (current != NULL)
 	{
 		if (!ft_strncmp(current->key, "PATH", 4))
 		{
+			my_free(paths);
 			paths = ft_split(current->value, ':');
 			return (paths);
 		}
 		current = current->next;
 	}
-	return (NULL);
+	return (paths);
 }
 
 static char	*ft_join_path(char *s1, char connector, char *s2)
@@ -86,17 +88,23 @@ void	validate(t_node *temp, t_env_head *envp)
 	char			**command;
 	char			**paths;
 
+	command = NULL;
+	paths = NULL;
 	while (temp)
 	{
 		if (temp->type == CMND)
 		{
 			command = ft_split(temp->cmnd, ' ');
-			paths = split_paths(envp);
-			if (paths == NULL)
-				perror("validate");
-			valid_check(temp, paths, command);
+			if (temp->t_builtin == 0)
+			{
+				paths = split_paths(envp);
+				if (paths != NULL)
+					valid_check(temp, paths, command);
+				my_free(paths);
+			}
+			else
+				temp->cmnd_path = ft_strdup(command[0]);
 			my_free(command);
-			my_free(paths);
 		}
 		temp = temp->next;
 	}
@@ -104,8 +112,11 @@ void	validate(t_node *temp, t_env_head *envp)
 
 void	fork_exec(t_node *temp, char **command)
 {
-	int	pid;
+	int		pid;
+	char	**envp_char;
 
+	if (pipe_in_out(temp->head->current) == -1 && temp->t_builtin != 0)
+		return (built_in(temp->head->envp_ours, temp, FALSE));
 	pid = fork();
 	if (pid == -1)
 		perror("fork\n");
@@ -113,13 +124,11 @@ void	fork_exec(t_node *temp, char **command)
 	temp->head->cnt_pid++;
 	if (pid == 0)
 	{
+		envp_char = path_str(temp->head->envp_ours);
 		pipes_child(temp, command);
 		if (temp->t_builtin != 0)
-		{
-			built_in(temp->head->envp_ours, temp);
-			exit(EXIT_SUCCESS);
-		}
-		else if (execve(temp->cmnd_path, command, temp->head->envp_og) == -1)
+			built_in(temp->head->envp_ours, temp, TRUE);
+		else if (execve(temp->cmnd_path, command, envp_char) == -1)
 			perror("fork\n");
 	}
 	pipes_parent(temp);
