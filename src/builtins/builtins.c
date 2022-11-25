@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:41:01 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/21 23:13:13 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/25 16:13:03 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ char	*check_echo_flag(t_node *node, char *s)
 {
 	int		i;
 	int		j;
+	int		x;
 	char	**str;
 
 	i = 0;
@@ -30,7 +31,16 @@ char	*check_echo_flag(t_node *node, char *s)
 			s += 2;
 		}
 		else
+		{
+			x = 0;
+			while (str[x])
+			{
+				free(str[x]);
+				x++;
+			}
+			free(str);
 			return (s);
+		}
 		while (str[i][j] && str[i][j] == 'n')
 		{
 			j++;
@@ -40,6 +50,13 @@ char	*check_echo_flag(t_node *node, char *s)
 		if (*s && *s == ' ')
 			s++;
 	}
+	i = 0;
+	while (str[i])
+	{
+		free(str[i]);
+		i++;
+	}
+	free(str);
 	return (s);
 }
 
@@ -98,13 +115,12 @@ void	check_builtins(t_head *head)
 
 void	built_in(t_env_head *envp, t_node *current)
 {
-	dprintf(2, "running builtins..\n");
 	if (current->t_builtin == T_ECHO)
 		ft_echo(current, current->cmnd);
 	if (current->t_builtin == T_CD)
 		dprintf(2, "cd()");
 	if (current->t_builtin == T_PWD)
-		dprintf(2, "pwd()");
+		ft_pwd();
 	if (current->t_builtin == T_EXPORT)
 		ft_export(&envp, current->cmnd);
 	if (current->t_builtin == T_UNSET)

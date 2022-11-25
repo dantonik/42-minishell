@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+         #
+#    By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/24 22:05:24 by dantonik          #+#    #+#              #
-#    Updated: 2022/11/21 21:56:12 by cboubour         ###   ########.fr        #
+#    Updated: 2022/11/24 01:54:40 by dantonik         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ LIBA = ./lib/libft/libft.a
 SRC = main.c \
 	builtins/builtins.c \
 	builtins/env_vars.c \
+	builtins/ft_pwd.c \
 	env/env_ll.c \
 	expander/expander.c \
 	lexer/lexer.c \
@@ -50,19 +51,20 @@ YELLOW		=	\e[38;5;226m
 OK_COLOR	=	\033[0;32m
 NO_COLOR	=	\033[m
 
-# READLINE	=	-I~/.brew/opt/readline/include
-# LIBRARY		=	-L$$HOME/.brew/opt/readline/lib -lreadline
-# INCREADH 	=	-I /Users/$(USER)/.brew/opt/readline/include
-# INCREADL 	=	-lreadline -L /Users/$(USER)/.brew/opt/readline/lib
-INCLUDES = -I$(DLDIR)/readline_out/include -Ilibft -Iincludes
-LDFLAGS = -L$(DLDIR)/readline_out/lib -lreadline
+ISDOCKER := $(shell ls -a /)
+ifeq ( , $(findstring .dockerenv, $(ISDOCKER)))
+	INCLUDES = -I$(DLDIR)/readline_out/include -Ilibft -Iincludes
+	LDFLAGS = -L$(DLDIR)/readline_out/lib -lreadline
+else
+	INCLUDES = -Iusr/local/lib/readline-8.1.2/include -Ilibft -Iincludes
+	LDFLAGS = -Lusr/local/lib/readline-8.1.2/lib -lreadline
+endif
+
 
 OBJS = $(addprefix $(OBJDIR)/, $(SRC:.c=.o))
 
 all: $(NAME)
 
-# $(OBJDIR)/%.o: %.c | $(OBJDIR)
-# 	@$(CC) $(INCREADH) -c $^ -o $@
 $(OBJDIR)/%.o: %.c | $(OBJDIR)
 	@$(CC) $(INCLUDES) -MMD -MP -c $^ -o $@
 
@@ -76,8 +78,10 @@ $(OBJDIR):
 	@mkdir -p obj/expander
 	@mkdir -p obj/string_builder
 
-# $(NAME): $(OBJ) $(LIBFT) inc/minishell.h
-# 	gcc $(FLAGS) $(OBJ) $(LIBFT) $(READLINE) $(INCREADL) $(LIBRARY) -o $(NAME)
+# $(NAME): $(OBJS) $(LIBFT) inc/minishell.h inc/structs.h | $(LIBA)
+# 	@gcc $(FLAGS) $(OBJS) $(LIBA) $(INCLUDES) $(LDFLAGS) -o $(NAME)
+# 	@printf "$(YELLOW)\n\t      -> Building $(NAME) ...$(NO_COLOR)\n"
+
 $(NAME): $(DLDIR) $(OBJS) $(LIBFT) inc/minishell.h inc/structs.h | $(LIBA)
 	@gcc $(FLAGS) $(OBJS) $(LIBA) $(INCLUDES) $(LDFLAGS) -o $(NAME)
 	@printf "$(YELLOW)\n\t      -> Building $(NAME) ...$(NO_COLOR)\n"
@@ -113,10 +117,6 @@ fclean f: clean
 		rm -rf $(NAME); \
 		printf "%-53b%b" "$(PURPLE)minishell executable deleted :" "$(OK_COLOR)[✓]$(NO_COLOR)\n"; \
 	fi
-	@# @if [ -d "DL" ]; then \
-	@# 	rm -rf $(DLDIR); \
-	@# 	printf "%-53b%b" "$(PURPLE)Downloads deleted :" "$(OK_COLOR)[✓]$(NO_COLOR)\n"; \
-	@# fi
 	@printf "%-53b%b" "$(LCYAN)libft fclean:" "$(OK_COLOR)[✓]$(NO_COLOR)\n"
 	@printf "\n"
 

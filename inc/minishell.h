@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:13 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/21 23:05:39 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/25 00:45:33 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@
 # include "structs.h"
 # include <fcntl.h>
 # include <stdio.h>
+# include <limits.h>
 # include <unistd.h>
 # include <stdbool.h>
 # include <sys/wait.h>
+# include <sys/param.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
@@ -28,10 +30,14 @@
 # define READ 0
 # define P_BOTH 10
 
+#define SQ_FLAG 0b00000001
+#define DQ_FLAG 0b00000010
+
 //// BUILTINS
 void		built_in(t_env_head *envp, t_node *current);
 void		ft_echo(t_node *head, char *s);
 void		check_builtins(t_head *head);
+int			ft_pwd(void);
 // ENV VARS
 void		ft_env(t_env_head *head);
 void		ft_export(t_env_head **head, char *cmnd);

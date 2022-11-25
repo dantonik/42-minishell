@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:22:15 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/21 22:43:32 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/24 00:24:54 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,12 @@ static char	**split_paths(t_env_head *envp)
 	t_env_node	*current;
 
 	current = envp->head;
+	paths = NULL;
 	while (current != NULL)
 	{
 		if (!ft_strncmp(current->key, "PATH", 4))
 		{
+			my_free(paths);
 			paths = ft_split(current->value, ':');
 			return (paths);
 		}

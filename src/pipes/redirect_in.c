@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_in.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/16 01:32:19 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/24 00:12:06 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ static int	last_red_in(t_node *temp)
 {
 	int		last_red;
 
+	last_red = 0;
 	while (temp && temp->type != PIPE)
 	{
 		if (temp->type == RED_IN || temp->type == HEREDOC)

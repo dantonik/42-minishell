@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_out.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/16 01:32:40 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/23 23:54:03 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ static int	red_out_file_exists(t_node *curr)
 	int				f_out;
 	int				last;
 
+	f_out = -1;
 	temp = curr;
 	last = last_red_in(temp);
 	while (temp && temp->type != PIPE && (temp->pos < last || !is_cmnd(curr)))
@@ -99,7 +100,11 @@ static int	red_out_file_exists(t_node *curr)
 			close(f_out);
 		}
 		else if (temp->type == CMND && temp->cmnd_path == NULL)
+		{
+			if (f_out == -1)
+				close(f_out);
 			return (exit_free("command not found"));
+		}
 		temp = temp->next;
 	}
 	return (last);
@@ -108,7 +113,7 @@ static int	red_out_file_exists(t_node *curr)
 int	redirect_out(t_node *current)
 {
 	t_node			*temp;
-	int				f_out;
+	// int				f_out;
 	int				last_red;
 
 	temp = current;

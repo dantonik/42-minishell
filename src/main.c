@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/21 22:40:40 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/25 16:33:29 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,26 @@ static int	check_empty_input(char *input)
 		return (0);
 }
 
+void	free_list_env(t_env_head **a)
+{
+	t_env_node	*temp;
+
+	temp = (*a)->head;
+	while (temp != NULL)
+	{
+		(*a)->head = (*a)->head->next;
+		free (temp->key);
+		free (temp->value);
+		free (temp);
+		temp = (*a)->head;
+	}
+	(*a)->head = NULL;
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char		*input;
+	char		*tmp;
 	t_head		*head;
 	t_env_head	*env_head;
 
@@ -56,14 +73,13 @@ int	main(int argc, char **argv, char **envp)
 		printf("trash: %s: No such file or directory\n", argv[1]);
 		return (EXIT_FAILURE);
 	}
-	if (envp[0] == NULL)
+	if (envp == NULL || envp[0] == NULL)
 	{
 		printf("trash: send the environment please!\n");
 		return (EXIT_FAILURE);
 	}
 	env_head = (t_env_head *)ft_calloc(1, sizeof(t_env_head));
 	init_envs(&env_head, envp);
-	// printl_env(env_head);
 	head = (t_head *)ft_calloc(1, sizeof(t_head));
 	if (head == NULL)
 		exit(1);
@@ -76,11 +92,21 @@ int	main(int argc, char **argv, char **envp)
 	{
 		input = NULL;
 		input = readline(MINISHELL);
+		if (!input)
+			break ;
 		if (check_empty_input(input))
 			continue ;
 		else
 			add_history(input);
+		tmp = input;
 		input = expander(input, env_head);
+		if (!input)
+		{
+			printf("trash: invalid input!\n");
+			continue ;
+		}
+		remove_dup_c(input, ' ');
+		free(tmp);
 		head->length = 0;
 		head->temp_fd = -1;
 		head->envp_og = envp;
@@ -89,11 +115,18 @@ int	main(int argc, char **argv, char **envp)
 		check_builtins(head);
 		main_loop(head, env_head);
 		free(input);
-		// printl(head);
+		printl(head);
 		free_list_loop(&head);
 	}
 	close(head->std_input[1]);
 	close(head->std_output[1]);
+	free_list_loop(&head);
+	free_list_env(&env_head);
 	free(head);
+	free(env_head);
+	if (input)
+		free (input);
+	rl_clear_history();
+	// system("leaks minishell");
 	return (0);
 }

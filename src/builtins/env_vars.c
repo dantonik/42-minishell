@@ -6,7 +6,7 @@
 /*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 23:08:48 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/09 03:23:58 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/25 16:14:29 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ int	check_exp(t_env_head **head, char *cmnd)
 void	ft_export(t_env_head **head, char *cmnd)
 {
 	int	i;
+
 	if (ms_strcmp_exact("export", cmnd) == 0)
 	{
 		printl_export(*head);

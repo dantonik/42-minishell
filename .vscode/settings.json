@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"sstream": "c",
+		"type_traits": "c",
+		"ios": "c"
+	}
+}

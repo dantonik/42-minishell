@@ -20,7 +20,7 @@ all: $(NAME)
 
 $(NAME): $(OBJECTS)
 	@$(CC) $(CFLAGS) -c $(SRC)
-	@ar r libft.a $(OBJECTS) libft.h
+	@ar rc $(NAME) $(OBJECTS) libft.h
 
 %.o: %.c
 	@$(CC) $< -c $(CFLAGS) -o $@
