@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/26 21:12:13 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/26 22:32:42 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/26 23:42:57 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,59 +26,41 @@ int	get_arr_size(char **arr)
 
 static bool	check_valid_arg(char *arg)
 {
-	if (!*arg || (*arg != '+' && *arg != '-' && !ft_is_digit(*arg)))
+	if (!*arg || (*arg != '+' && *arg != '-' && !ft_isdigit(*arg)))
 		return (false);
 	arg++;
 	while (*arg)
 	{
-		if (!ft_is_digit(*arg))
+		if (!ft_isdigit(*arg))
 			return (false);
 		arg++;
 	}
 	return (true);
 }
 
-int	exit_code(_node *temp)
+int	exit_code(t_node *temp)
 {
 	char	**cmnd;
 	int		arr_size;
+	int		num_val;
 
 	cmnd = ft_split(temp->cmnd, ' ');
 	arr_size = get_arr_size(cmnd);
-	if (arr_size > 0)
+	if (arr_size > 1)
 	{
 		if (cmnd[1] && check_valid_arg(cmnd[1]))
-			return (ft_atoi(cmnd[1]));
+			return (num_val = ft_atoi(cmnd[1]) % 256, my_free(cmnd), num_val);
 		else
-			printf("exit\ntrash: exit: %s: numeric argument required" ,);
+		{
+			printf("exit\ntrash: exit: %s: numeric argument required\n", cmnd[1]);
+			return (my_free(cmnd), 255);
+		}
 	}
 	else
-		mini->ret = 0;
+		return (my_free(cmnd), 0);
 	if (arr_size > 2)
-		return (printf("exit\ntrash: exit: too many arguments\n"), 1);
-}
-
-void	ft_exit(t_table *table)
-{
-	char	**command;
-
-	command = ft_split(temp->cmnd, ' ');
-	if (get_arr_size(command) > 0)
 	{
-		if (ft_is_alpha(**table->cmd_arr)
-			|| get_arr_size(table->cmd_arr) == 1)
-		{
-			if (check_valid_arg(*table->cmd_arr))
-				g_exit_status = ft_atoi(*table->cmd_arr);
-			else
-				g_exit_status = exit_error(*table->cmd_arr, 255);
-			free_table(&table);
-			valid_exit();
-		}
-		g_exit_status = error_msg("exit: too many arguments", FAIL);
-		return ;
+		my_free(cmnd);
+		return (printf("exit\ntrash: exit: too many arguments\n"), 1);
 	}
-	g_exit_status = SUCCESS;
-	free_table(&table);
-	valid_exit();
 }

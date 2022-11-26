@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:41:01 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/26 22:39:41 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/26 23:16:29 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,8 @@ void	built_in(t_env_head *envp, t_node *current, t_bool forked)
 		ft_unset(&envp, current->cmnd);
 	if (current->t_builtin == T_ENV)
 		ft_env(envp);
-	// if (current->t_builtin == T_EXIT)
-	// 	exit(exit_code(temp));
+	if (current->t_builtin == T_EXIT)
+		exit(exit_code(current));
 	if (forked)
 		exit(EXIT_SUCCESS);
 	else

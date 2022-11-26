@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:13 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/26 22:55:07 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/26 23:14:01 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ char		**path_str(t_env_head *envp);
 t_bool		is_cm(t_node *current, int direction);
 char		**split_paths(t_env_head *envp);
 char		*ft_join_path(char *s1, char connector, char *s2);
+int			exit_code(t_node *temp);
 
 //// STRING BUILDER
 t_stringbuilder	*sb_create(void);

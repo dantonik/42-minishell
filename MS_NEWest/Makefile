@@ -6,7 +6,7 @@
 #    By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/24 22:05:24 by dantonik          #+#    #+#              #
-#    Updated: 2022/11/26 03:56:50 by cboubour         ###   ########.fr        #
+#    Updated: 2022/11/26 23:17:00 by cboubour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SRC = main.c \
 	builtins/env_vars.c \
 	builtins/ft_cd.c \
 	builtins/ft_pwd.c \
+	builtins/exit.c \
 	env/env_ll.c \
 	expander/expander.c \
 	lexer/lexer.c \
