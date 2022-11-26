@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 01:00:04 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/26 03:31:47 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/26 03:43:54 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ static int	exec_funcs(t_node *temp, t_head *head, t_bool pipe)
 		res = redirect_in(temp);
 	if (res != -1 && res != -2)
 		res = redirect_out(temp);
-	// if (res != -1 && res != -2)
 	temp->head->current = execute(temp);
 	if (res == -1 || res == -2)
 	{
@@ -101,8 +100,7 @@ void	pipes_child(t_node *temp, char *command)
 	pipe_loc = pipe_in_out(temp->head->current);
 	if (temp->head->std_input[0] != 1 && (pipe_loc == 0 || pipe_loc == P_BOTH))
 	{
-		// dprintf(2, "cmnd: %s, child_input, loc: %d\n", command, pipe_loc);
-		if (is_cmd(temp, 0))
+		if (is_cm(temp, 0))
 		{
 			if (dup2(temp->head->temp_fd, STDIN_FILENO) != -1)
 				close(temp->head->temp_fd);
@@ -112,7 +110,6 @@ void	pipes_child(t_node *temp, char *command)
 	}
 	if (temp->head->std_output[0] != 1 && (pipe_loc == 1 || pipe_loc == P_BOTH))
 	{
-		// dprintf(2, "cmnd: %s, child output, loc: %d\n", command, pipe_loc);
 		if (dup2(temp->head->pipe_fd[WRITE], STDOUT_FILENO) == -1)
 			perror("dup2 output child fork");
 	}
@@ -129,7 +126,6 @@ void	pipes_parent(t_node *temp, char *command)
 	pipe_loc = pipe_in_out(temp->head->current);
 	if (temp->head->std_input[0] != 1 && (pipe_loc == 0 || pipe_loc == P_BOTH))
 	{
-		// printf("cmnd: %s, parent_input, loc: %d\n", command, pipe_loc);
 		close(temp->head->temp_fd);
 		if (pipe_loc != P_BOTH)
 			close(temp->head->pipe_fd[READ]);
@@ -137,7 +133,6 @@ void	pipes_parent(t_node *temp, char *command)
 	}
 	if (temp->head->std_output[0] != 1 && (pipe_loc == 1 || pipe_loc == P_BOTH))
 	{
-		// printf("cmnd: %s, parent output, loc: %d\n", command, pipe_loc);
 		if (pipe_loc != P_BOTH)
 			close(temp->head->pipe_fd[WRITE]);
 		temp->head->temp_fd = temp->head->pipe_fd[READ];

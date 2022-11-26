@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:13 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/24 23:38:31 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/26 03:55:55 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void		free_list_loop(t_head **a);
 //// PIPES
 int			redirect_in(t_node *head);
 int			redirect_out(t_node *head);
+int			last_red_in(t_node *temp, int red);
 void		validate(t_node *head, t_env_head *envp);
 t_node		*execute(t_node *head);
 void		pipes_child(t_node *temp, char *command);
@@ -89,7 +90,9 @@ int			pipe_in_out(t_node *current);
 int			ret(char *err, t_bool perr, int fd, int cmnd);
 void		my_free(char **arr);
 char		**path_str(t_env_head *envp);
-t_bool		is_cmd(t_node *current, int direction);
+t_bool		is_cm(t_node *current, int direction);
+char		**split_paths(t_env_head *envp);
+char		*ft_join_path(char *s1, char connector, char *s2);
 
 //// STRING BUILDER
 t_stringbuilder	*sb_create(void);

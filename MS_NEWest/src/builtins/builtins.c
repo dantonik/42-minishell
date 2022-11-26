@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:41:01 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/24 22:18:09 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/26 03:56:11 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,6 @@ void	check_builtins(t_head *head)
 
 void	built_in(t_env_head *envp, t_node *current, t_bool forked)
 {
-	// printf("running builtins..\n");
 	if (current->t_builtin == T_ECHO)
 		ft_echo(current, current->cmnd);
 	if (current->t_builtin == T_CD)

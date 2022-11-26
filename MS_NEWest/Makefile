@@ -6,7 +6,7 @@
 #    By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/24 22:05:24 by dantonik          #+#    #+#              #
-#    Updated: 2022/11/22 21:05:40 by cboubour         ###   ########.fr        #
+#    Updated: 2022/11/26 03:56:50 by cboubour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,6 +39,7 @@ SRC = main.c \
 	pipes/redirect_out.c \
 	pipes/execution.c \
 	pipes/pipes.c \
+	pipes/utils.c \
 	string_builder/stringbuilder.c \
 	string_builder/stringbuilder_utils.c
 

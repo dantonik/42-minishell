@@ -6,60 +6,13 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:22:15 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/26 03:31:36 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/26 03:55:01 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	my_free(char **arr)
-{
-	int	i;
-
-	if (!arr)
-		return ;
-	i = 0;
-	while (arr[i])
-	{
-		free(arr[i]);
-		arr[i] = NULL;
-		i++;
-	}
-	free (arr);
-}
-
-static char	**split_paths(t_env_head *envp)
-{
-	char		**paths;
-	t_env_node	*current;
-
-	paths = NULL;
-	current = envp->head;
-	while (current != NULL)
-	{
-		if (!ft_strncmp(current->key, "PATH", 4))
-		{
-			my_free(paths);
-			paths = ft_split(current->value, ':');
-			return (paths);
-		}
-		current = current->next;
-	}
-	return (paths);
-}
-
-static char	*ft_join_path(char *s1, char connector, char *s2)
-{
-	char	*temp;
-	char	*path;
-
-	temp = ft_strjoin(s1, "/");
-	path = ft_strjoin(temp, s2);
-	free(temp);
-	return (path);
-}
-
-void	valid_check(t_node *temp, char **paths, char **command)
+static void	valid_check(t_node *temp, char **paths, char **command)
 {
 	int		i;
 	char	*slash;
@@ -110,12 +63,11 @@ void	validate(t_node *temp, t_env_head *envp)
 	}
 }
 
-void	fork_exec(t_node *temp, char **command)
+static void	fork_exec(t_node *temp, char **command)
 {
 	int		pid;
 	char	**envp_char;
 
-	// printf("cmnd: %s, in_out: %d\n", command[0], pipe_in_out(temp->head->current));
 	if (pipe_in_out(temp->head->current) == -1 && temp->t_builtin != 0)
 		return (built_in(temp->head->envp_ours, temp, FALSE));
 	pid = fork();

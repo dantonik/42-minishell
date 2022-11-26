@@ -6,68 +6,11 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/25 00:45:55 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/26 03:52:56 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-t_bool	is_cmd(t_node *temp, int direction)
-{
-	t_bool		exists;
-
-	exists = FALSE;
-	while (direction == 0 && temp->prev && temp->type != PIPE)
-		temp = temp->prev;
-	while (direction == 0 && temp->prev && temp->prev->type != PIPE)
-		temp = temp->prev;
-	while (temp && temp->type != PIPE)
-	{
-		if (temp->type == CMND && temp->cmnd_path != NULL && direction != 1)
-			exists = TRUE;
-		temp = temp->next;
-	}
-	if (direction == 1)
-	{
-		if (temp)
-			temp = temp->next;
-		while (temp && temp->type != PIPE)
-		{
-			if (temp->type == CMND && temp->cmnd_path != NULL)
-				exists = TRUE;
-			temp = temp->next;
-		}
-	}
-	return (exists);
-}
-
-int	ret(char *err, t_bool perr, int fd, int cmnd)
-{
-	if (fd > 2)
-		close(fd);
-	if (perr)
-		perror(err);
-	else
-		printf("trash: %s\n", err);
-	if (cmnd)
-		return (-2);
-	return (-1);
-}
-
-static int	last_red_in(t_node *temp)
-{
-	int		last_red;
-
-	while (temp && temp->type != PIPE)
-	{
-		if (temp->type == RED_IN || temp->type == HEREDOC)
-		{
-			last_red = temp->pos;
-		}
-		temp = temp->next;
-	}
-	return (last_red);
-}
 
 static int	red_file(t_node *temp, t_bool heredoc, char **file)
 {
@@ -141,8 +84,8 @@ static int	red_in_file_exists(t_node *curr)
 	int				last;
 
 	temp = curr;
-	last = last_red_in(temp);
-	while (temp && temp->type != PIPE && (temp->pos < last || !is_cmd(curr, -1)))
+	last = last_red_in(temp, 0);
+	while (temp && temp->type != PIPE && (temp->pos < last || !is_cm(curr, -1)))
 	{
 		if ((temp->type == RED_IN || temp->type == HEREDOC))
 		{
@@ -173,7 +116,7 @@ int	redirect_in(t_node *temp)
 		return (last_red);
 	while (temp && temp->type != PIPE)
 	{
-		if (temp->pos == last_red && is_cmd(temp->head->current, -1))
+		if (temp->pos == last_red && is_cm(temp->head->current, -1))
 		{
 			if (temp->type == RED_IN)
 			{
