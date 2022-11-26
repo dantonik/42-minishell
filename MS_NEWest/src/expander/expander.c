@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 20:34:25 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/09 03:31:20 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/26 22:48:04 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*ms_strjoin(char *s1, char *s2)
 	return (str);
 }
 
-char	*check_var(char *s, t_env_head *head)
+t_stringbuilder	*check_var(char *s, t_env_head *head, t_stringbuilder *sb)
 {
 	int			i;
 	char		*var;
@@ -49,16 +49,16 @@ char	*check_var(char *s, t_env_head *head)
 	temp = head->head;
 	s++;
 	i = 0;
-	while (s[i] != '\0' && s[i] != ' ' && !ms_ispipe(s[i]))
+	while (s[i] != '\0' && s[i] != ' ' && !ms_ispipe(s[i]) && s[i] != '"')
 		i++;
 	var = ms_strdup(s, i);
 	while (temp->next != NULL)
 	{
 		if (ms_strcmp_exact(temp->key, var) == 0)
 		{
-			s = ms_strjoin(s, temp->value);
+			sb_append_str(sb, temp->value);
 			free (var);
-			return (temp->value);
+			return (sb);
 		}
 		temp = temp->next;
 	}
@@ -66,35 +66,53 @@ char	*check_var(char *s, t_env_head *head)
 	return (NULL);
 }
 
+t_stringbuilder	*h(char *s, t_env_head *h, t_stringbuilder *sb, unsigned int *f)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (s[i] != '\0')
+	{
+		if (s[i] == '\'' && !((*f) & DQ_FLAG))
+			(*f) ^= SQ_FLAG;
+		if (s[i] == '"' && !((*f) & SQ_FLAG))
+			(*f) ^= DQ_FLAG;
+		if (s[i] == '$' && !((*f) & SQ_FLAG))
+		{
+			check_var(s + i, h, sb);
+			while (s[i] != '\0' && s[i] != ' ' && !ms_ispipe(s[i]) \
+				&& s[i] != '"')
+				i++;
+			continue ;
+		}
+		sb_append_char(sb, s[i]);
+		i++;
+	}
+	return (sb);
+}
+
 char	*expander(char *s, t_env_head *head)
 {
-	bool	q[2];
-	char	*new;
-	char	*temp;
-	int		i;
-	t_stringbuilder	*sb;
+	int					i;
+	int					j;
+	char				*new;
+	unsigned int		flags;
+	t_stringbuilder		*sb;
 
+	flags = 0;
 	sb = sb_create();
-	q[0] = false;
-	q[1] = false;
-	while (*s != '\0')
-	{
-		if (*s == '\''&& q[1] == false)
-			q[0] = !q[0];
-		if (*s == '"' && q[0] == false)
-			q[1] = !q[1];
-		if (*s == '$' && q[0] == false)
-		{
-			new = check_var(s, head);
-			if (new)
-				sb_append_str(sb, new);
-			while (*s != '\0' && *s != ' ' && !ms_ispipe(*s))
-				s++;
-		}
-		sb_append_char(sb, *s);
-		s++;
-	}
+	sb = h(s, head, sb, &flags);
+	sb_append_char(sb, '\0');
 	new = sb_get_str(sb);
 	sb_destroy(sb);
+	if (flags & SQ_FLAG || flags & DQ_FLAG)
+	{
+		free (new);
+		return (NULL);
+	}
+	remove_dup_c(new, ' ');
+	free (s);
 	return (new);
 }

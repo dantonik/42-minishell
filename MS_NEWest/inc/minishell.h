@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:13 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/26 03:55:55 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/26 22:55:07 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 # define WRITE 1
 # define READ 0
 # define P_BOTH 10
+# define SQ_FLAG 0b00000001
+# define DQ_FLAG 0b00000010
 
 //// BUILTINS
 void		built_in(t_env_head *envp, t_node *current, t_bool forked);
@@ -44,8 +46,9 @@ void		ft_unset(t_env_head **head, char *s);
 void		printl_export(t_env_head *head);
 void		printl_env(t_env_head *head);
 void		add_env_tail(t_env_head **head, char *key, char *value);
-void		init_envs(t_env_head **head, char **env);
+t_env_head	*init_envs(char **env);
 void		free_env_list(t_env_head *a);
+void		free_list_env(t_env_head **a);
 
 //// EXPANDER
 char		*expander(char *s, t_env_head *head);
