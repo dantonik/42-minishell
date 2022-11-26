@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_vars.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 23:08:48 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/09 03:23:58 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/26 01:01:31 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,21 +34,38 @@ void	ft_unset(t_env_head **head, char *s)
 		{
 			if (ms_strcmp_exact(node->key, str[i]) == 0)
 			{
+				if (node == (*head)->head)
+				{
+					(*head)->head = node->next;
+					node->next->prev = node->prev;
+					my_free(str);
+					free(node->key);
+					free(node->value);
+					free(node);
+					return ;
+				}
 				node->prev->next = node->next;
 				node->next->prev = node->prev;
+				my_free(str);
+				free(node->key);
+				free(node->value);
 				free(node);
-				break ;
+				return ;
 			}
 			node = node->next;
 			if (node->next == NULL && ms_strcmp_exact(node->key, str[i]) == 0)
 			{
 				node->prev->next = NULL;
+				my_free(str);
+				free(node->key);
+				free(node->value);
 				free(node);
-				break ;
+				return ;
 			}
 		}
 		i++;
 	}
+	my_free(str);
 }
 
 int	append_replace(t_env_head **head, char *s, char *s2, int i)
@@ -74,6 +91,7 @@ int	check_exp(t_env_head **head, char *cmnd)
 	t_stringbuilder	*sb;
 	t_stringbuilder	*sb2;
 	int				i;
+	char			*c;
 
 	i = 0;
 	sb = sb_create();
@@ -83,11 +101,25 @@ int	check_exp(t_env_head **head, char *cmnd)
 		i++;
 	}
 	if (cmnd[i] == '\0')
-		return (append_replace(head, sb_get_str(sb), NULL, i));
+	{
+		i = append_replace(head, sb_get_str(sb), NULL, i);
+		sb_destroy(sb);
+		return (i);
+	}
 	if (cmnd[i] == ' ')
-		return (append_replace(head, sb_get_str(sb), NULL, i + 1));
+	{
+		i = append_replace(head, sb_get_str(sb), NULL, i + 1);
+		sb_destroy(sb);
+		return (i);
+	}
 	if (cmnd[i] == '=' && cmnd[i + 1] == '\0')
-		return (append_replace(head, sb_get_str(sb), "\0", i + 1));
+	{
+		c = (char *)malloc(sizeof(char));
+		*c = '\0';
+		i = append_replace(head, sb_get_str(sb), c, i + 1);
+		sb_destroy(sb);
+		return (i);
+	}
 	i++;
 	sb2 = sb_create();
 	while (cmnd[i] && cmnd[i] != ' ')
@@ -95,7 +127,10 @@ int	check_exp(t_env_head **head, char *cmnd)
 		sb_append_char(sb2, cmnd[i]);
 		i++;
 	}
-	return (append_replace(head, sb_get_str(sb), sb_get_str(sb2), i));
+	i = append_replace(head, sb_get_str(sb), sb_get_str(sb2), i);
+	sb_destroy(sb);
+	sb_destroy(sb2);
+	return (i);
 }
 
 void	ft_export(t_env_head **head, char *cmnd)

@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:41:01 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/24 01:10:31 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/24 22:18:09 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void	ft_echo(t_node *node, char *s)
 	if (*s && *s != ' ')
 	{
 		printf("trash: command not found\n");
+		node->t_builtin = 0;
 		return ;
 	}
 	s++;

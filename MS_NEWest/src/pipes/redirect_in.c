@@ -6,39 +6,51 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/24 01:07:02 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/25 00:45:55 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static t_bool	is_cmnd(t_node *current)
+t_bool	is_cmd(t_node *temp, int direction)
 {
-	t_node		*temp;
 	t_bool		exists;
 
-	temp = current;
 	exists = FALSE;
+	while (direction == 0 && temp->prev && temp->type != PIPE)
+		temp = temp->prev;
+	while (direction == 0 && temp->prev && temp->prev->type != PIPE)
+		temp = temp->prev;
 	while (temp && temp->type != PIPE)
 	{
-		if (temp->type == CMND && temp->cmnd_path != NULL)
+		if (temp->type == CMND && temp->cmnd_path != NULL && direction != 1)
 			exists = TRUE;
 		temp = temp->next;
+	}
+	if (direction == 1)
+	{
+		if (temp)
+			temp = temp->next;
+		while (temp && temp->type != PIPE)
+		{
+			if (temp->type == CMND && temp->cmnd_path != NULL)
+				exists = TRUE;
+			temp = temp->next;
+		}
 	}
 	return (exists);
 }
 
-int	ret(char *err, t_bool perr, int fd)
+int	ret(char *err, t_bool perr, int fd, int cmnd)
 {
 	if (fd > 2)
 		close(fd);
 	if (perr)
-	{
 		perror(err);
-		printf("\n");
-	}
 	else
 		printf("trash: %s\n", err);
+	if (cmnd)
+		return (-2);
 	return (-1);
 }
 
@@ -130,7 +142,7 @@ static int	red_in_file_exists(t_node *curr)
 
 	temp = curr;
 	last = last_red_in(temp);
-	while (temp && temp->type != PIPE && (temp->pos < last || !is_cmnd(curr)))
+	while (temp && temp->type != PIPE && (temp->pos < last || !is_cmd(curr, -1)))
 	{
 		if ((temp->type == RED_IN || temp->type == HEREDOC))
 		{
@@ -138,14 +150,14 @@ static int	red_in_file_exists(t_node *curr)
 			{
 				f_in = red_file(temp, FALSE, NULL);
 				if (f_in < 0)
-					return (ret("No such file or directory", FALSE, f_in));
+					return (ret("No such file or directory", FALSE, f_in, 0));
 				close(f_in);
 			}
 			else if (temp->type == HEREDOC)
 				use_heredoc(temp, TRUE);
 		}
 		else if (temp->type == CMND && temp->cmnd_path == NULL)
-			return (ret("command not found", FALSE, f_in));
+			return (ret("command not found", FALSE, f_in, 1));
 		temp = temp->next;
 	}
 	return (last);
@@ -157,23 +169,23 @@ int	redirect_in(t_node *temp)
 	int				last_red;
 
 	last_red = red_in_file_exists(temp->head->current);
-	if (last_red == -1)
-		return (-1);
+	if (last_red == -1 || last_red == -2)
+		return (last_red);
 	while (temp && temp->type != PIPE)
 	{
-		if (temp->pos == last_red && is_cmnd(temp->head->current))
+		if (temp->pos == last_red && is_cmd(temp->head->current, -1))
 		{
 			if (temp->type == RED_IN)
 			{
 				f_in = red_file(temp, FALSE, NULL);
 				if (setup_dup2(temp, f_in, STDIN_FILENO) == -1)
-					return (ret("No such file or directory", FALSE, f_in));
+					return (ret("No such file or directory", FALSE, f_in, 0));
 				close(f_in);
 			}
 			else if (temp->type == HEREDOC)
 				use_heredoc(temp, FALSE);
 			else if (temp->type == CMND && temp->cmnd_path == NULL)
-				return (ret("command not found", FALSE, f_in));
+				return (ret("command not found", FALSE, f_in, 1));
 		}
 		temp = temp->next;
 	}

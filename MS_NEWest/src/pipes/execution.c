@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:22:15 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/24 03:05:14 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/26 03:31:36 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ void	fork_exec(t_node *temp, char **command)
 	int		pid;
 	char	**envp_char;
 
+	// printf("cmnd: %s, in_out: %d\n", command[0], pipe_in_out(temp->head->current));
 	if (pipe_in_out(temp->head->current) == -1 && temp->t_builtin != 0)
 		return (built_in(temp->head->envp_ours, temp, FALSE));
 	pid = fork();
@@ -125,13 +126,13 @@ void	fork_exec(t_node *temp, char **command)
 	if (pid == 0)
 	{
 		envp_char = path_str(temp->head->envp_ours);
-		pipes_child(temp, command);
+		pipes_child(temp, command[0]);
 		if (temp->t_builtin != 0)
 			built_in(temp->head->envp_ours, temp, TRUE);
 		else if (execve(temp->cmnd_path, command, envp_char) == -1)
-			perror("fork\n");
+			perror("execve");
 	}
-	pipes_parent(temp);
+	pipes_parent(temp, command[0]);
 }
 
 t_node	*execute(t_node *temp)

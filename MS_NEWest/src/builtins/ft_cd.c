@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 01:47:31 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/24 00:15:09 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/25 22:23:43 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,12 @@ static char	*ms_getenv(t_node *temp, char *str)
 
 static char	*ms_checktilde(t_node *temp, char *str)
 {
-	if (!ft_strlen(str) || *str != '~' || !ms_getenv(temp, "HOME"))
-		return (ft_strdup(str));
-	str++;
-	return (ft_strjoin(ms_getenv(temp, "HOME"), str));
+	if (*str == '~')
+		return (ms_getenv(temp, "HOME"));
+	else if (*str == '-')
+		return (ms_getenv(temp, "OLDPWD"));
+	else
+		return (str);
 }
 
 static int	ms_putenv(t_node *temp, char *name, char *val)
@@ -54,7 +56,7 @@ static int	ms_putenv(t_node *temp, char *name, char *val)
 		curr_env->value = ft_memcpy(curr_env->value, val, ft_strlen(val));
 	}
 	else
-		return (ret("Path does not exist", FALSE, -1));
+		return (ret("Path does not exist", FALSE, -1, 0));
 	if (curr_env->value)
 		return (0);
 	else
@@ -81,23 +83,21 @@ int	ft_cd(t_node *temp)
 {
 	char	**command;
 	int		err;
-	char	*new;
 
+	if (temp->cmnd[2] && temp->cmnd[2] != ' ')
+	{
+		printf("trash: command not found\n");
+		temp->t_builtin = 0;
+		return (-1);
+	}
 	command = ft_split(temp->cmnd, ' ');
 	if (!command[1])
-	{
 		err = chdir(ms_getenv(temp, "HOME"));
-		// printf("ms_getenv: %s, err: %d\n", ms_getenv(temp, "HOME"), err);
-	}
 	else
-	{
-		new = ms_checktilde(temp, command[1]);
-		err = chdir(new);
-		if (new)
-			free(new);
-	}
+		err = chdir(ms_checktilde(temp, command[1]));
+	my_free(command);
 	if (err)
-		return (ret("err in chdir", TRUE, -1));
+		return (ret("err in chdir", TRUE, -1, 0));
 	else
 		err = ms_update_dir(temp);
 	return (err);

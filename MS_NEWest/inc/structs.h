@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:16:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/24 03:03:05 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/26 02:49:11 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ typedef struct linkedList
 	int				pipe_fd[2];
 	int				std_input[2];
 	int				std_output[2];
+	// t_bool			is_first_valid;
 	t_env_head		*envp_ours;
 // .......................................
 	struct Node		*head;

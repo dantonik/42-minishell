@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 01:00:04 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/24 00:34:42 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/26 03:31:47 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ static int	exec_funcs(t_node *temp, t_head *head, t_bool pipe)
 	}
 	if (res != -1)
 		res = redirect_in(temp);
-	if (res != -1)
+	if (res != -1 && res != -2)
 		res = redirect_out(temp);
-	if (res != -1)
-		temp->head->current = execute(temp);
-	else
+	// if (res != -1 && res != -2)
+	temp->head->current = execute(temp);
+	if (res == -1 || res == -2)
 	{
 		close(head->pipe_fd[READ]);
 		close(head->pipe_fd[WRITE]);
@@ -42,21 +42,24 @@ static int	exec_funcs(t_node *temp, t_head *head, t_bool pipe)
 
 int	main_loop(t_head *head, t_env_head *envp)
 {
+	int	exec_ret;
+
 	head->current = head->head;
 	if (head->current->type == PIPE)
-		return (ret("syntax error near unexpected token `|'", FALSE, -1));
+		return (ret("syntax error near unexpected token `|'", FALSE, -1, 0));
 	validate(head->current, envp);
 	while (head->current)
 	{
 		if (pipe(head->pipe_fd) == -1)
 			perror(MINISHELL);
 		if (head->current->type == PIPE)
-		{
-			if (exec_funcs(head->current->next, head, TRUE) == -1)
-				return (-1);
-		}
-		else if (exec_funcs(head->current, head, FALSE) == -1)
+			exec_ret = exec_funcs(head->current->next, head, TRUE);
+		else
+			exec_ret = exec_funcs(head->current, head, FALSE);
+		if (exec_ret == -1)
 			return (-1);
+		else if (exec_ret == -2)
+			continue ;
 	}
 	while (head->cnt_pid > 0)
 	{
@@ -90,7 +93,7 @@ int	pipe_in_out(t_node *current)
 	return (res);
 }
 
-void	pipes_child(t_node *temp, char **command)
+void	pipes_child(t_node *temp, char *command)
 {
 	int	pipe_loc;
 	int	read_pipe;
@@ -98,15 +101,20 @@ void	pipes_child(t_node *temp, char **command)
 	pipe_loc = pipe_in_out(temp->head->current);
 	if (temp->head->std_input[0] != 1 && (pipe_loc == 0 || pipe_loc == P_BOTH))
 	{
-		if (dup2(temp->head->temp_fd, STDIN_FILENO) != -1)
-			close(temp->head->temp_fd);
-		else
-			perror("dup2 in fork");
+		// dprintf(2, "cmnd: %s, child_input, loc: %d\n", command, pipe_loc);
+		if (is_cmd(temp, 0))
+		{
+			if (dup2(temp->head->temp_fd, STDIN_FILENO) != -1)
+				close(temp->head->temp_fd);
+			else
+				perror("dup2 input child fork");
+		}
 	}
 	if (temp->head->std_output[0] != 1 && (pipe_loc == 1 || pipe_loc == P_BOTH))
 	{
+		// dprintf(2, "cmnd: %s, child output, loc: %d\n", command, pipe_loc);
 		if (dup2(temp->head->pipe_fd[WRITE], STDOUT_FILENO) == -1)
-			perror("dup2 in fork");
+			perror("dup2 output child fork");
 	}
 	if (temp->head->std_input[0] == 1 && temp->head->temp_fd != -1)
 		close(temp->head->temp_fd);
@@ -114,13 +122,14 @@ void	pipes_child(t_node *temp, char **command)
 	close(temp->head->pipe_fd[WRITE]);
 }
 
-void	pipes_parent(t_node *temp)
+void	pipes_parent(t_node *temp, char *command)
 {
 	int	pipe_loc;
 
 	pipe_loc = pipe_in_out(temp->head->current);
 	if (temp->head->std_input[0] != 1 && (pipe_loc == 0 || pipe_loc == P_BOTH))
 	{
+		// printf("cmnd: %s, parent_input, loc: %d\n", command, pipe_loc);
 		close(temp->head->temp_fd);
 		if (pipe_loc != P_BOTH)
 			close(temp->head->pipe_fd[READ]);
@@ -128,6 +137,7 @@ void	pipes_parent(t_node *temp)
 	}
 	if (temp->head->std_output[0] != 1 && (pipe_loc == 1 || pipe_loc == P_BOTH))
 	{
+		// printf("cmnd: %s, parent output, loc: %d\n", command, pipe_loc);
 		if (pipe_loc != P_BOTH)
 			close(temp->head->pipe_fd[WRITE]);
 		temp->head->temp_fd = temp->head->pipe_fd[READ];
