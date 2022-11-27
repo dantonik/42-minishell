@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+         #
+#    By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/24 22:05:24 by dantonik          #+#    #+#              #
-#    Updated: 2022/11/26 23:17:00 by cboubour         ###   ########.fr        #
+#    Updated: 2022/11/27 03:13:37 by dantonik         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,12 +24,15 @@ LIBSDIR	= lib
 DLDIR = DL
 LIBA = ./lib/libft/libft.a
 SRC = main.c \
+	ms.c \
 	builtins/builtins.c \
+	builtins/builtins_utils.c \
 	builtins/env_vars.c \
 	builtins/ft_cd.c \
 	builtins/ft_pwd.c \
 	builtins/exit.c \
 	env/env_ll.c \
+	env/env_ll2.c \
 	expander/expander.c \
 	lexer/lexer.c \
 	lexer/lexer_ll.c \

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:13 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/26 23:14:01 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 03:13:26 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,21 +32,22 @@
 # define DQ_FLAG 0b00000010
 
 //// BUILTINS
-void		built_in(t_env_head *envp, t_node *current, t_bool forked);
-void		ft_echo(t_node *head, char *s);
+int			built_in(t_env_head *envp, t_node *current, t_bool forked);
+void		ft_echo(t_head *head, t_node *node, char *s);
 void		check_builtins(t_head *head);
 int			ft_cd(t_node *temp);
-int			ft_pwd(void);
+int			ft_pwd(t_head *head);
 // ENV VARS
-void		ft_env(t_env_head *head);
-void		ft_export(t_env_head **head, char *cmnd);
-void		ft_unset(t_env_head **head, char *s);
+void		ft_env(t_env_head *head, t_head *thead);
+int			ft_export(t_env_head **head, char *cmnd, t_head *thead);
+int			ft_unset(t_env_head **head, char *s, int i);
 
 //// ENV ll
 void		printl_export(t_env_head *head);
 void		printl_env(t_env_head *head);
 void		add_env_tail(t_env_head **head, char *key, char *value);
-t_env_head	*init_envs(char **env);
+t_env_head	*init_envs(char **env, t_head *thead);
+t_head		*init_head(char **argv);
 void		free_env_list(t_env_head *a);
 void		free_list_env(t_env_head **a);
 

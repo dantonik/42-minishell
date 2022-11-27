@@ -1,32 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   env_ll2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/22 21:03:54 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/27 01:36:21 by dantonik         ###   ########.fr       */
+/*   Created: 2022/11/27 03:04:16 by dantonik          #+#    #+#             */
+/*   Updated: 2022/11/27 03:04:49 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	ft_pwd(t_head *head)
+void	free_env_list(t_env_head *a)
 {
-	char	*pwd;
-	int		len;
+	t_env_node	*temp;
 
-	pwd = getcwd(NULL, MAXPATHLEN);
-	if (pwd != NULL)
+	temp = a->head;
+	while (temp != NULL)
 	{
-		len = ft_strlen(pwd);
-		write(1, pwd, len);
-		write(1, "\n", 1);
-		free(pwd);
-		head->e_s = 0;
-		return (0);
+		a->head = a->head->next;
+		free(temp->key);
+		free(temp->value);
+		free (temp);
+		temp = a->head;
 	}
-	head->e_s = 1;
-	return (1);
+	free(a);
+}
+
+void	free_list_env(t_env_head **a)
+{
+	t_env_node	*temp;
+
+	temp = (*a)->head;
+	while (temp != NULL)
+	{
+		(*a)->head = (*a)->head->next;
+		free (temp->key);
+		free (temp->value);
+		free (temp);
+		temp = (*a)->head;
+	}
+	(*a)->head = NULL;
 }

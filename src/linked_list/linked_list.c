@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   linked_list.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:38:05 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/24 20:22:32 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 03:10:16 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,21 +29,12 @@ void	add_token_tail(t_head **head, char *str, int type)
 	new->t_builtin = 0;
 	new->head = (*head);
 	new->pos = (*head)->length;
-	// new->pos = 1;
 	current = (*head)->head;
 	if ((*head)->head == NULL)
-	{
-		(*head)->head = new;
-		(*head)->tail = new;
-		new->prev = NULL;
-		return ;
-	}
+		return ((*head)->head = new, (*head)->tail = new, \
+		new->prev = NULL, free_list(NULL));
 	while (current->next != NULL)
 		current = current->next;
-	// {
-	// 	new->pos++;
-	// 	current = current->next;
-	// }
 	current->next = new;
 	new->prev = current;
 	(*head)->tail = new;
@@ -54,6 +45,8 @@ void	free_list(t_head *a)
 	t_node		*temp;
 	t_env_node	*env_temp;
 
+	if (a == NULL)
+		return ;
 	temp = a->head;
 	while (temp != NULL)
 	{

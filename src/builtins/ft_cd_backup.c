@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/27 03:19:25 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 03:19:29 by dantonik         ###   ########.fr       */
+/*   Created: 2022/11/22 01:47:31 by cboubour          #+#    #+#             */
+/*   Updated: 2022/11/27 01:36:08 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,7 @@ static int	ms_putenv(t_node *temp, char *name, char *val)
 		curr_env->value = ft_memcpy(curr_env->value, val, ft_strlen(val));
 	}
 	else
-	{
-		temp->head->e_s = 1;
-		return (printf("%s ", name), ret("does not exist", FALSE, -1, 0));
-	}
+		return (ret("Path does not exist", FALSE, -1, 0));
 	if (curr_env->value)
 		return (0);
 	else
@@ -84,28 +81,24 @@ static int	ms_update_dir(t_node *temp)
 
 int	ft_cd(t_node *temp)
 {
-	char		**command;
-	int			err;
-	t_env_head	*current;
+	char	**command;
+	int		err;
 
-	current = temp->head->envp_ours;
 	if (temp->cmnd[2] && temp->cmnd[2] != ' ')
 	{
 		printf("trash: command not found\n");
-		return (temp->t_builtin = 0, temp->head->e_s = 127, -1);
+		temp->t_builtin = 0;
+		return (temp->head->e_s = 127, -1);
 	}
 	command = ft_split(temp->cmnd, ' ');
-	if (!command[1] && !ms_getenv(temp, "HOME"))
-		add_env_tail(&current, "OLDPWD", ms_getenv(temp, "HOME"));
-	else if (!ms_checktilde(temp, command[1]))
-		add_env_tail(&current, "OLDPWD", ms_checktilde(temp, command[1]));
 	if (!command[1])
 		err = chdir(ms_getenv(temp, "HOME"));
 	else
 		err = chdir(ms_checktilde(temp, command[1]));
+	my_free(command);
 	if (err)
-		return (my_free(command), temp->head->e_s = 1, ret("cd", TRUE, -1, 0));
+		return (temp->head->e_s = 1, ret("trash: cd", TRUE, -1, 0));
 	else
 		err = ms_update_dir(temp);
-	return (my_free(command), err);
+	return (err);
 }

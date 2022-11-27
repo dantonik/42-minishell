@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_ll.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:25:15 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/26 22:54:42 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 03:04:44 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	add_env_tail(t_env_head **head, char *key, char *value)
 	(*head)->tail = new;
 }
 
-t_env_head	*init_envs(char **env)
+t_env_head	*init_envs(char **env, t_head *thead)
 {
 	char		**str;
 	int			i;
@@ -82,6 +82,7 @@ t_env_head	*init_envs(char **env)
 	t_env_head	*head;
 
 	head = (t_env_head *)ft_calloc(1, sizeof(t_env_head));
+	head->thead = thead;
 	i = 0;
 	while (env[i] != NULL)
 	{
@@ -91,36 +92,4 @@ t_env_head	*init_envs(char **env)
 		i++;
 	}
 	return (head);
-}
-
-void	free_env_list(t_env_head *a)
-{
-	t_env_node	*temp;
-
-	temp = a->head;
-	while (temp != NULL)
-	{
-		a->head = a->head->next;
-		free(temp->key);
-		free(temp->value);
-		free (temp);
-		temp = a->head;
-	}
-	free(a);
-}
-
-void	free_list_env(t_env_head **a)
-{
-	t_env_node	*temp;
-
-	temp = (*a)->head;
-	while (temp != NULL)
-	{
-		(*a)->head = (*a)->head->next;
-		free (temp->key);
-		free (temp->value);
-		free (temp);
-		temp = (*a)->head;
-	}
-	(*a)->head = NULL;
 }

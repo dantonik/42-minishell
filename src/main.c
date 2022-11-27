@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/26 23:05:02 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 03:12:48 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,15 +69,6 @@ int	inner_loop(t_head *head, t_env_head *env_head, char *input)
 	return (0);
 }
 
-t_head	*init_head(char **argv)
-{
-	t_head	*head;
-
-	(void) argv;
-	return (head = (t_head *)ft_calloc(1, sizeof(t_head)), \
-	head->std_input[1] = dup(0), head->std_output[1] = dup(1), head);
-}
-
 char	**path_str(t_env_head *envp)
 {
 	char		**paths;
@@ -108,8 +99,8 @@ int	main(int argc, char **argv, char **envp)
 			EXIT_FAILURE);
 	if (envp == NULL || envp[0] == NULL)
 		return (printf("trash: send the environment please!\n"), EXIT_FAILURE);
-	env_head = init_envs(envp);
 	head = init_head(argv);
+	env_head = init_envs(envp, head);
 	if (head == NULL)
 		exit(1);
 	signal(SIGINT, handler);

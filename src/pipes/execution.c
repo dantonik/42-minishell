@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:22:15 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/27 00:55:02 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 03:03:20 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	validate(t_node *temp, t_env_head *envp)
 	}
 }
 
-static void	fork_exec(t_node *temp, char **command)
+static int	fork_exec(t_node *temp, char **command)
 {
 	int		pid;
 	char	**envp_char;
@@ -83,6 +83,7 @@ static void	fork_exec(t_node *temp, char **command)
 			perror("execve");
 	}
 	pipes_parent(temp, command[0]);
+	return (0);
 }
 
 t_node	*execute(t_node *temp)

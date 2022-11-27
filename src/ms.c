@@ -1,32 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ms.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/22 21:03:54 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/27 01:36:21 by dantonik         ###   ########.fr       */
+/*   Created: 2022/11/27 03:12:17 by dantonik          #+#    #+#             */
+/*   Updated: 2022/11/27 03:12:51 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "../inc/minishell.h"
 
-int	ft_pwd(t_head *head)
+t_head	*init_head(char **argv)
 {
-	char	*pwd;
-	int		len;
+	t_head	*head;
 
-	pwd = getcwd(NULL, MAXPATHLEN);
-	if (pwd != NULL)
-	{
-		len = ft_strlen(pwd);
-		write(1, pwd, len);
-		write(1, "\n", 1);
-		free(pwd);
-		head->e_s = 0;
-		return (0);
-	}
-	head->e_s = 1;
-	return (1);
+	(void) argv;
+	return (head = (t_head *)ft_calloc(1, sizeof(t_head)), \
+	head->std_input[1] = dup(0), head->std_output[1] = dup(1), head);
 }

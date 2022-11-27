@@ -26,17 +26,20 @@ t_stringbuilder	*sb_create(void)
 
 int	sb_destroy(t_stringbuilder *sb)
 {
-	free(sb->str);
+	if (sb->str)
+		free(sb->str);
 	sb->str = NULL;
 	sb->len = 0;
-	free(sb);
+	if (sb)
+		free(sb);
 	sb = NULL;
 	return (0);
 }
 
 int	sb_clear(t_stringbuilder *sb)
 {
-	free(sb->str);
+	if (sb->str)
+		free(sb->str);
 	sb->str = ft_calloc(1, sizeof(char));
 	if (!sb->str)
 	{

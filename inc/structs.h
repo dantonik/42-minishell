@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:16:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 00:55:12 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 01:47:55 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,10 @@ typedef struct NodeEnv
 
 typedef struct linkedListEnv
 {
-	int				length;
-	struct NodeEnv	*head;
-	struct NodeEnv	*tail;
+	int					length;
+	struct linkedList	*thead;
+	struct NodeEnv		*head;
+	struct NodeEnv		*tail;
 }				t_env_head;
 
 typedef struct linkedList
@@ -82,7 +83,7 @@ typedef struct linkedList
 	int				pipe_fd[2];
 	int				std_input[2];
 	int				std_output[2];
-	int				exit_status;
+	int				e_s;
 	int				exit_cd;
 	t_env_head		*envp_ours;
 // .......................................
