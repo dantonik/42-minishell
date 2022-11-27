@@ -6,7 +6,7 @@
 /*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 03:19:25 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 03:19:29 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/27 03:22:52 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,9 @@ int	ft_cd(t_node *temp)
 		return (temp->t_builtin = 0, temp->head->e_s = 127, -1);
 	}
 	command = ft_split(temp->cmnd, ' ');
-	if (!command[1] && !ms_getenv(temp, "HOME"))
+	if (!command[1] && !ms_getenv(temp, "OLDPWD"))
 		add_env_tail(&current, "OLDPWD", ms_getenv(temp, "HOME"));
-	else if (!ms_checktilde(temp, command[1]))
+	else if (!ms_getenv(temp, "OLDPWD"))
 		add_env_tail(&current, "OLDPWD", ms_checktilde(temp, command[1]));
 	if (!command[1])
 		err = chdir(ms_getenv(temp, "HOME"));
