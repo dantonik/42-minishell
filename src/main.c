@@ -6,7 +6,7 @@
 /*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 03:12:48 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/27 03:27:59 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int	main(int argc, char **argv, char **envp)
 			EXIT_FAILURE);
 	if (envp == NULL || envp[0] == NULL)
 		return (printf("trash: send the environment please!\n"), EXIT_FAILURE);
+	input = NULL;
 	head = init_head(argv);
 	env_head = init_envs(envp, head);
 	if (head == NULL)

@@ -6,7 +6,7 @@
 /*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 02:21:51 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 03:15:34 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/27 03:39:11 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	built_in(t_env_head *envp, t_node *current, t_bool forked)
 	if (current->t_builtin == T_ENV)
 		return (current->head->e_s = 0, ft_env(envp, current->head), 0);
 	if (current->t_builtin == T_EXIT)
-		return (current->head->e_s = 0, dprintf(2, "exit()"), 0);
+		return (current->head->e_s = 0, exit(exit_code(current)), 0);
 	if (forked)
 		exit(EXIT_SUCCESS);
 	else

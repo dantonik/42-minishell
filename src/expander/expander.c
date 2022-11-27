@@ -6,7 +6,7 @@
 /*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 20:34:25 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 02:19:09 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/27 03:29:43 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ t_stringbuilder	*check_var(char *s, t_env_head *head, t_stringbuilder *sb)
 	temp = head->head;
 	s++;
 	i = 0;
-	if (s[0] == '?' && s[1] == '\0' || (s[1] && (s[1] == ' '
+	if ((s[0] == '?' && s[1] == '\0') || (s[1] && (s[1] == ' '
 				|| s[1] == '/' || s[1] == '\0')))
 		return (c = ft_itoa(head->thead->e_s), sb_append_str(sb, c), \
 				free (c), sb);
@@ -95,8 +95,6 @@ t_stringbuilder	*h(char *s, t_env_head *h, t_stringbuilder *sb, unsigned int *f)
 
 char	*expander(char *s, t_env_head *head)
 {
-	int					i;
-	int					j;
 	char				*new;
 	unsigned int		flags;
 	t_stringbuilder		*sb;

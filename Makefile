@@ -6,7 +6,7 @@
 #    By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/24 22:05:24 by dantonik          #+#    #+#              #
-#    Updated: 2022/11/27 03:13:37 by dantonik         ###   ########.fr        #
+#    Updated: 2022/11/27 03:26:35 by dantonik         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,7 +71,7 @@ all: $(NAME)
 # $(OBJDIR)/%.o: %.c | $(OBJDIR)
 # 	@$(CC) $(INCREADH) -c $^ -o $@
 $(OBJDIR)/%.o: %.c | $(OBJDIR)
-	@$(CC) $(INCLUDES) -MMD -MP -c $^ -o $@
+	@$(CC) $(FLAGS) $(INCLUDES) -MMD -MP -c $^ -o $@
 
 $(OBJDIR):
 	@mkdir -p $(OBJDIR)

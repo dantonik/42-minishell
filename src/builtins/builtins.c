@@ -6,7 +6,7 @@
 /*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:41:01 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 02:21:43 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/27 03:28:22 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,6 @@ char	*check_echo_flag(t_node *node, char *s)
 
 void	ft_echo(t_head *head, t_node *node, char *s)
 {
-	int	i;
-
 	s += 4;
 	if (*s && *s != ' ')
 	{

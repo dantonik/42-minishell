@@ -6,7 +6,7 @@
 /*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:25:15 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 03:04:44 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/27 03:28:36 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ t_env_head	*init_envs(char **env, t_head *thead)
 {
 	char		**str;
 	int			i;
-	int			j;
 	t_env_head	*head;
 
 	head = (t_env_head *)ft_calloc(1, sizeof(t_env_head));

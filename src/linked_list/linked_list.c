@@ -6,7 +6,7 @@
 /*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:38:05 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 03:10:16 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/27 03:30:00 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void	add_token_tail(t_head **head, char *str, int type)
 void	free_list(t_head *a)
 {
 	t_node		*temp;
-	t_env_node	*env_temp;
 
 	if (a == NULL)
 		return ;
