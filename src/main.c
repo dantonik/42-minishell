@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 06:26:14 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 07:12:35 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,14 +82,20 @@ char	**path_str(t_env_head *envp)
 {
 	char		**paths;
 	t_env_node	*current;
+	char		*temp;
 	int			i;
 
-	paths = ft_calloc(envp->length, sizeof(char *));
+	paths = ft_calloc(envp->length + 1, sizeof(char *));
 	i = 0;
 	current = envp->head;
 	while (current != NULL)
 	{
-		paths[i] = ft_strjoin(current->key, current->value);
+		if (current->value != NULL)
+		{
+			temp = ft_strjoin(current->key, "=");
+			paths[i] = ft_strjoin(temp, current->value);
+			free(temp);
+		}
 		current = current->next;
 		i++;
 	}
