@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+         #
+#    By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/24 22:05:24 by dantonik          #+#    #+#              #
-#    Updated: 2022/11/27 03:26:35 by dantonik         ###   ########.fr        #
+#    Updated: 2022/11/26 23:17:00 by cboubour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,15 +24,12 @@ LIBSDIR	= lib
 DLDIR = DL
 LIBA = ./lib/libft/libft.a
 SRC = main.c \
-	ms.c \
 	builtins/builtins.c \
-	builtins/builtins_utils.c \
 	builtins/env_vars.c \
 	builtins/ft_cd.c \
 	builtins/ft_pwd.c \
 	builtins/exit.c \
 	env/env_ll.c \
-	env/env_ll2.c \
 	expander/expander.c \
 	lexer/lexer.c \
 	lexer/lexer_ll.c \
@@ -71,7 +68,7 @@ all: $(NAME)
 # $(OBJDIR)/%.o: %.c | $(OBJDIR)
 # 	@$(CC) $(INCREADH) -c $^ -o $@
 $(OBJDIR)/%.o: %.c | $(OBJDIR)
-	@$(CC) $(FLAGS) $(INCLUDES) -MMD -MP -c $^ -o $@
+	@$(CC) $(INCLUDES) -MMD -MP -c $^ -o $@
 
 $(OBJDIR):
 	@mkdir -p $(OBJDIR)

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 21:03:54 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/27 01:36:21 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/22 21:06:24 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	ft_pwd(t_head *head)
+int	ft_pwd(void)
 {
 	char	*pwd;
 	int		len;
@@ -24,9 +24,7 @@ int	ft_pwd(t_head *head)
 		write(1, pwd, len);
 		write(1, "\n", 1);
 		free(pwd);
-		head->e_s = 0;
 		return (0);
 	}
-	head->e_s = 1;
 	return (1);
 }

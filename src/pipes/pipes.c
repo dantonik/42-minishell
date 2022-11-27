@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 01:00:04 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/27 03:30:46 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/27 01:08:51 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	main_loop(t_head *head, t_env_head *envp)
 	while (waitpid(-1, &head->exit_cd, 0) != -1)
 	{
 		if (WIFEXITED(head->exit_cd))
-			head->e_s = WEXITSTATUS(head->exit_cd);
+			head->exit_status = WEXITSTATUS(head->exit_cd);
 	}
 	return (0);
 }
@@ -92,9 +92,10 @@ int	pipe_in_out(t_node *current)
 	return (res);
 }
 
-void	pipes_child(t_node *temp)
+void	pipes_child(t_node *temp, char *command)
 {
 	int	pipe_loc;
+	int	read_pipe;
 
 	pipe_loc = pipe_in_out(temp->head->current);
 	if (temp->head->std_input[0] != 1 && (pipe_loc == 0 || pipe_loc == P_BOTH))
@@ -118,7 +119,7 @@ void	pipes_child(t_node *temp)
 	close(temp->head->pipe_fd[WRITE]);
 }
 
-void	pipes_parent(t_node *temp)
+void	pipes_parent(t_node *temp, char *command)
 {
 	int	pipe_loc;
 

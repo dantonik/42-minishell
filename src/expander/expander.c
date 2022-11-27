@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 20:34:25 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 03:29:43 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/26 22:48:04 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,25 +45,25 @@ t_stringbuilder	*check_var(char *s, t_env_head *head, t_stringbuilder *sb)
 	int			i;
 	char		*var;
 	t_env_node	*temp;
-	char		*c;
 
 	temp = head->head;
 	s++;
 	i = 0;
-	if ((s[0] == '?' && s[1] == '\0') || (s[1] && (s[1] == ' '
-				|| s[1] == '/' || s[1] == '\0')))
-		return (c = ft_itoa(head->thead->e_s), sb_append_str(sb, c), \
-				free (c), sb);
 	while (s[i] != '\0' && s[i] != ' ' && !ms_ispipe(s[i]) && s[i] != '"')
 		i++;
 	var = ms_strdup(s, i);
 	while (temp->next != NULL)
 	{
 		if (ms_strcmp_exact(temp->key, var) == 0)
-			return (sb_append_str(sb, temp->value), free (var), sb);
+		{
+			sb_append_str(sb, temp->value);
+			free (var);
+			return (sb);
+		}
 		temp = temp->next;
 	}
-	return (free(var), NULL);
+	free(var);
+	return (NULL);
 }
 
 t_stringbuilder	*h(char *s, t_env_head *h, t_stringbuilder *sb, unsigned int *f)
@@ -95,6 +95,8 @@ t_stringbuilder	*h(char *s, t_env_head *h, t_stringbuilder *sb, unsigned int *f)
 
 char	*expander(char *s, t_env_head *head)
 {
+	int					i;
+	int					j;
 	char				*new;
 	unsigned int		flags;
 	t_stringbuilder		*sb;

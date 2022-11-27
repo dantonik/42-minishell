@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:22:15 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/27 03:33:39 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/27 00:55:02 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	valid_check(t_node *temp, char **paths, char **command)
 	i = 0;
 	while (paths[i])
 	{
-		path = ft_join_path(paths[i], command[0]);
+		path = ft_join_path(paths[i], '/', command[0]);
 		if (access(path, F_OK | X_OK) == 0)
 			temp->cmnd_path = ft_strdup(path);
 		free(path);
@@ -63,7 +63,7 @@ void	validate(t_node *temp, t_env_head *envp)
 	}
 }
 
-static int	fork_exec(t_node *temp, char **command)
+static void	fork_exec(t_node *temp, char **command)
 {
 	int		pid;
 	char	**envp_char;
@@ -76,14 +76,13 @@ static int	fork_exec(t_node *temp, char **command)
 	if (pid == 0)
 	{
 		envp_char = path_str(temp->head->envp_ours);
-		pipes_child(temp);
+		pipes_child(temp, command[0]);
 		if (temp->t_builtin != 0)
 			built_in(temp->head->envp_ours, temp, TRUE);
 		else if (execve(temp->cmnd_path, command, envp_char) == -1)
 			perror("execve");
 	}
-	pipes_parent(temp);
-	return (0);
+	pipes_parent(temp, command[0]);
 }
 
 t_node	*execute(t_node *temp)

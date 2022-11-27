@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:13 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 03:32:18 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/27 05:56:04 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <readline/history.h>
 
 # define MINISHELL "\033[1;93mtrash-3.2$ \033[0;39m"
+# define CMD_N "trash: command not found\n"
 # define WRITE 1
 # define READ 0
 # define P_BOTH 10
@@ -32,22 +33,21 @@
 # define DQ_FLAG 0b00000010
 
 //// BUILTINS
-int			built_in(t_env_head *envp, t_node *current, t_bool forked);
-void		ft_echo(t_head *head, t_node *node, char *s);
+void		built_in(t_env_head *envp, t_node *current, t_bool forked);
+void		ft_echo(t_node *head, char *s);
 void		check_builtins(t_head *head);
 int			ft_cd(t_node *temp);
-int			ft_pwd(t_head *head);
+int			ft_pwd(void);
 // ENV VARS
-void		ft_env(t_env_head *head, t_head *thead);
-int			ft_export(t_env_head **head, char *cmnd, t_head *thead);
-int			ft_unset(t_env_head **head, char *s, int i);
+void		ft_env(t_env_head *head);
+void		ft_export(t_env_head **head, char *cmnd);
+void		ft_unset(t_env_head **head, char *s);
 
 //// ENV ll
 void		printl_export(t_env_head *head);
 void		printl_env(t_env_head *head);
 void		add_env_tail(t_env_head **head, char *key, char *value);
-t_env_head	*init_envs(char **env, t_head *thead);
-t_head		*init_head(char **argv);
+t_env_head	*init_envs(char **env);
 void		free_env_list(t_env_head *a);
 void		free_list_env(t_env_head **a);
 
@@ -87,8 +87,8 @@ int			redirect_out(t_node *head);
 int			last_red_in(t_node *temp, int red);
 void		validate(t_node *head, t_env_head *envp);
 t_node		*execute(t_node *head);
-void		pipes_child(t_node *temp);
-void		pipes_parent(t_node *temp);
+void		pipes_child(t_node *temp, char *command);
+void		pipes_parent(t_node *temp, char *command);
 int			main_loop(t_head *head, t_env_head *envp);
 int			pipe_in_out(t_node *current);
 int			ret(char *err, t_bool perr, int fd, int cmnd);
@@ -96,7 +96,7 @@ void		my_free(char **arr);
 char		**path_str(t_env_head *envp);
 t_bool		is_cm(t_node *current, int direction);
 char		**split_paths(t_env_head *envp);
-char		*ft_join_path(char *s1, char *s2);
+char		*ft_join_path(char *s1, char connector, char *s2);
 int			exit_code(t_node *temp);
 
 //// STRING BUILDER

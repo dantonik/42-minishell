@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_cd.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/27 03:19:25 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 03:22:52 by dantonik         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../../inc/minishell.h"
 
 static char	*ms_getenv(t_node *temp, char *str)
@@ -84,28 +72,28 @@ static int	ms_update_dir(t_node *temp)
 
 int	ft_cd(t_node *temp)
 {
-	char		**command;
-	int			err;
-	t_env_head	*current;
+	char	**command;
+	int		err;
+	char	*key;
+	char	*value;
 
-	current = temp->head->envp_ours;
 	if (temp->cmnd[2] && temp->cmnd[2] != ' ')
+		return (printf(CMD_N), temp->t_builtin = 0, temp->head->e_s = 127, -1);
+	if (!ms_getenv(temp, "OLDPWD"))
 	{
-		printf("trash: command not found\n");
-		return (temp->t_builtin = 0, temp->head->e_s = 127, -1);
+		key = ft_strdup("OLDPWD");
+		value = getcwd(NULL, 0);
+		add_env_tail(&(temp->head->envp_ours), key, value);
 	}
 	command = ft_split(temp->cmnd, ' ');
-	if (!command[1] && !ms_getenv(temp, "OLDPWD"))
-		add_env_tail(&current, "OLDPWD", ms_getenv(temp, "HOME"));
-	else if (!ms_getenv(temp, "OLDPWD"))
-		add_env_tail(&current, "OLDPWD", ms_checktilde(temp, command[1]));
 	if (!command[1])
 		err = chdir(ms_getenv(temp, "HOME"));
 	else
 		err = chdir(ms_checktilde(temp, command[1]));
+	my_free(command);
 	if (err)
-		return (my_free(command), temp->head->e_s = 1, ret("cd", TRUE, -1, 0));
+		return (temp->head->e_s = 1, ret("trash: cd", TRUE, -1, 0));
 	else
 		err = ms_update_dir(temp);
-	return (my_free(command), err);
+	return (err);
 }
