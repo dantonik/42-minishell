@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:16:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 05:56:46 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 06:27:32 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,10 @@ typedef struct NodeEnv
 
 typedef struct linkedListEnv
 {
-	int				length;
-	struct NodeEnv	*head;
-	struct NodeEnv	*tail;
+	int					length;
+	struct linkedList	*thead;
+	struct NodeEnv		*head;
+	struct NodeEnv		*tail;
 }				t_env_head;
 
 typedef struct linkedList

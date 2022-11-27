@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:41:01 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/26 23:16:29 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 06:44:19 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	ft_echo(t_node *node, char *s)
 	{
 		printf("trash: command not found\n");
 		node->t_builtin = 0;
+		node->head->e_s = 1;
 		return ;
 	}
 	s++;
@@ -69,6 +70,7 @@ void	ft_echo(t_node *node, char *s)
 	}
 	if (node->echo_n == FALSE)
 		printf("\n");
+	node->head->e_s = 0;
 }
 
 void	check_builtins(t_head *head)
@@ -106,17 +108,17 @@ void	built_in(t_env_head *envp, t_node *current, t_bool forked)
 	if (current->t_builtin == T_ECHO)
 		ft_echo(current, current->cmnd);
 	if (current->t_builtin == T_CD)
-		ft_cd(current);
+		return (current->head->e_s = 0, (void)ft_cd(current));
 	if (current->t_builtin == T_PWD)
-		ft_pwd();
+		return (current->head->e_s = 0, (void)ft_pwd());
 	if (current->t_builtin == T_EXPORT)
-		ft_export(&envp, current->cmnd);
+		return (current->head->e_s = 0, (void)ft_export(&envp, current->cmnd));
 	if (current->t_builtin == T_UNSET)
-		ft_unset(&envp, current->cmnd);
+		return (current->head->e_s = 0, (void)ft_unset(&envp, current->cmnd));
 	if (current->t_builtin == T_ENV)
-		ft_env(envp);
+		return (current->head->e_s = 0, (void)ft_env(envp));
 	if (current->t_builtin == T_EXIT)
-		exit(exit_code(current));
+		return (current->head->e_s = 0, (void)exit(exit_code(current)));
 	if (forked)
 		exit(EXIT_SUCCESS);
 	else

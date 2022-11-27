@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:13 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 05:56:04 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 06:27:49 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,11 @@
 # include <readline/history.h>
 
 # define MINISHELL "\033[1;93mtrash-3.2$ \033[0;39m"
+# define NO_FILE "No such file or directory"
+# define NO_CMND "command not found"
 # define CMD_N "trash: command not found\n"
+# define PIPE_ERR "syntax error near unexpected token `|'"
+
 # define WRITE 1
 # define READ 0
 # define P_BOTH 10
@@ -47,7 +51,7 @@ void		ft_unset(t_env_head **head, char *s);
 void		printl_export(t_env_head *head);
 void		printl_env(t_env_head *head);
 void		add_env_tail(t_env_head **head, char *key, char *value);
-t_env_head	*init_envs(char **env);
+t_env_head	*init_envs(char **env, t_head *thead);
 void		free_env_list(t_env_head *a);
 void		free_list_env(t_env_head **a);
 

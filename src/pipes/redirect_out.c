@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/26 03:51:03 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 06:11:39 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,11 @@ static int	red_out_file_exists(t_node *curr)
 			else if (temp->type == APPEND)
 				f_out = red_file(temp, TRUE);
 			if (f_out < 0)
-				return (ret("No such file or directory", FALSE, f_out, 0));
+				return (temp->head->e_s = 1, ret(NO_FILE, FALSE, f_out, 0));
 			close(f_out);
 		}
 		else if (temp->type == CMND && temp->cmnd_path == NULL)
-			return (ret("command not found", FALSE, f_out, 1));
+			return (temp->head->e_s = 127, ret(NO_CMND, FALSE, f_out, 1));
 		temp = temp->next;
 	}
 	return (last);
@@ -107,7 +107,7 @@ int	redirect_out(t_node *current)
 			else if (temp->type == APPEND)
 				setup_dup2(temp, TRUE);
 			else if (temp->type == CMND && temp->cmnd_path == NULL)
-				return (ret("command not found", FALSE, -1, 1));
+				return (temp->head->e_s = 127, ret(NO_CMND, FALSE, -1, 1));
 		}
 		temp = temp->next;
 	}

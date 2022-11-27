@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 01:00:04 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/27 01:08:51 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 06:38:47 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	main_loop(t_head *head, t_env_head *envp)
 
 	head->current = head->head;
 	if (head->current->type == PIPE)
-		return (ret("syntax error near unexpected token `|'", FALSE, -1, 0));
+		return (head->e_s = 258, ret(PIPE_ERR, FALSE, -1, 0));
 	validate(head->current, envp);
 	while (head->current)
 	{
@@ -63,7 +63,7 @@ int	main_loop(t_head *head, t_env_head *envp)
 	while (waitpid(-1, &head->exit_cd, 0) != -1)
 	{
 		if (WIFEXITED(head->exit_cd))
-			head->exit_status = WEXITSTATUS(head->exit_cd);
+			head->e_s = WEXITSTATUS(head->exit_cd);
 	}
 	return (0);
 }

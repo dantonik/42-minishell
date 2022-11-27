@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_cd.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/27 06:25:38 by cboubour          #+#    #+#             */
+/*   Updated: 2022/11/27 06:25:39 by cboubour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../inc/minishell.h"
 
 static char	*ms_getenv(t_node *temp, char *str)
@@ -21,7 +33,10 @@ static char	*ms_checktilde(t_node *temp, char *str)
 	if (*str == '~')
 		return (ms_getenv(temp, "HOME"));
 	else if (*str == '-')
+	{
+		printf("%s\n", ms_getenv(temp, "OLDPWD"));
 		return (ms_getenv(temp, "OLDPWD"));
+	}
 	else
 		return (str);
 }

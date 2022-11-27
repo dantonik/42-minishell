@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/26 23:05:02 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 06:26:14 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,8 @@ int	main(int argc, char **argv, char **envp)
 			EXIT_FAILURE);
 	if (envp == NULL || envp[0] == NULL)
 		return (printf("trash: send the environment please!\n"), EXIT_FAILURE);
-	env_head = init_envs(envp);
 	head = init_head(argv);
+	env_head = init_envs(envp, head);
 	if (head == NULL)
 		exit(1);
 	signal(SIGINT, handler);

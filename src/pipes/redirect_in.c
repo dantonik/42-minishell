@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/26 03:52:56 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 06:19:34 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,14 +93,14 @@ static int	red_in_file_exists(t_node *curr)
 			{
 				f_in = red_file(temp, FALSE, NULL);
 				if (f_in < 0)
-					return (ret("No such file or directory", FALSE, f_in, 0));
+					return (temp->head->e_s = 1, ret(NO_FILE, FALSE, f_in, 0));
 				close(f_in);
 			}
 			else if (temp->type == HEREDOC)
 				use_heredoc(temp, TRUE);
 		}
 		else if (temp->type == CMND && temp->cmnd_path == NULL)
-			return (ret("command not found", FALSE, f_in, 1));
+			return (temp->head->e_s = 127, ret(NO_CMND, FALSE, f_in, 1));
 		temp = temp->next;
 	}
 	return (last);
@@ -122,13 +122,13 @@ int	redirect_in(t_node *temp)
 			{
 				f_in = red_file(temp, FALSE, NULL);
 				if (setup_dup2(temp, f_in, STDIN_FILENO) == -1)
-					return (ret("No such file or directory", FALSE, f_in, 0));
+					return (temp->head->e_s = 1, ret(NO_FILE, FALSE, f_in, 0));
 				close(f_in);
 			}
 			else if (temp->type == HEREDOC)
 				use_heredoc(temp, FALSE);
 			else if (temp->type == CMND && temp->cmnd_path == NULL)
-				return (ret("command not found", FALSE, f_in, 1));
+				return (temp->head->e_s = 127, ret(NO_CMND, FALSE, f_in, 1));
 		}
 		temp = temp->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 20:34:25 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/26 22:48:04 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 06:29:14 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,15 @@ t_stringbuilder	*check_var(char *s, t_env_head *head, t_stringbuilder *sb)
 	int			i;
 	char		*var;
 	t_env_node	*temp;
+	char		*c;
 
 	temp = head->head;
 	s++;
 	i = 0;
+	if ((s[0] == '?' && s[1] == '\0') || (s[1] && (s[1] == ' '
+				|| s[1] == '/' || s[1] == '\0')))
+		return (c = ft_itoa(head->thead->e_s), sb_append_str(sb, c), \
+				free (c), sb);
 	while (s[i] != '\0' && s[i] != ' ' && !ms_ispipe(s[i]) && s[i] != '"')
 		i++;
 	var = ms_strdup(s, i);
