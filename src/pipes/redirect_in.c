@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 23:35:40 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/27 06:19:34 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/28 00:54:07 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int	redirect_in(t_node *temp)
 	int				f_in;
 	int				last_red;
 
-	last_red = red_in_file_exists(temp->head->current);
+	last_red = red_in_file_exists(temp);
 	if (last_red == -1 || last_red == -2)
 		return (last_red);
 	while (temp && temp->type != PIPE)

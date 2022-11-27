@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 01:00:04 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/27 09:16:39 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/28 00:55:41 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	main_loop(t_head *head, t_env_head *envp)
 	while (head->current)
 	{
 		if (pipe(head->pipe_fd) == -1)
-			perror(MINISHELL);
+			perror("pipe creation afiled\n");
 		if (head->current->type == PIPE)
 			exec_ret = exec_funcs(head->current->next, head, TRUE);
 		else
@@ -99,7 +99,7 @@ void	pipes_child(t_node *temp)
 	pipe_loc = pipe_in_out(temp->head->current);
 	if (temp->head->std_input[0] != 1 && (pipe_loc == 0 || pipe_loc == P_BOTH))
 	{
-		if (is_cm(temp, 0))
+		if (is_cm(temp, 0) && temp->head->temp_fd != -1)
 		{
 			if (dup2(temp->head->temp_fd, STDIN_FILENO) != -1)
 				close(temp->head->temp_fd);
@@ -123,7 +123,8 @@ void	pipes_parent(t_node *temp)
 	int	pipe_loc;
 
 	pipe_loc = pipe_in_out(temp->head->current);
-	if (temp->head->std_input[0] != 1 && (pipe_loc == 0 || pipe_loc == P_BOTH))
+	if (temp->head->std_input[0] != 1 && temp->head->temp_fd != -1 && \
+		(pipe_loc == 0 || pipe_loc == P_BOTH))
 	{
 		close(temp->head->temp_fd);
 		if (pipe_loc != P_BOTH)
@@ -136,6 +137,8 @@ void	pipes_parent(t_node *temp)
 			close(temp->head->pipe_fd[WRITE]);
 		temp->head->temp_fd = temp->head->pipe_fd[READ];
 	}
+	else
+		temp->head->temp_fd = -1;
 	if (temp->head->std_input[0] == 1 && pipe_loc != 1)
 	{
 		close(temp->head->temp_fd);

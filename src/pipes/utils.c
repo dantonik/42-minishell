@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/26 03:53:08 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/27 09:17:37 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/28 00:53:08 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,13 @@ t_bool	is_cm(t_node *temp, int direction)
 		temp = temp->prev;
 	while (direction == 0 && temp->prev && temp->prev->type != PIPE)
 		temp = temp->prev;
+	if (direction == -1 && temp->type == PIPE)
+		temp = temp->next;
 	while (temp && temp->type != PIPE)
 	{
 		if (temp->type == CMND && temp->cmnd_path != NULL && direction != 1)
 			exists = TRUE;
 		temp = temp->next;
-	}
-	if (direction == 1)
-	{
-		if (temp)
-			temp = temp->next;
-		while (temp && temp->type != PIPE)
-		{
-			if (temp->type == CMND && temp->cmnd_path != NULL)
-				exists = TRUE;
-			temp = temp->next;
-		}
 	}
 	return (exists);
 }
