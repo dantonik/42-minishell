@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 20:34:25 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 06:29:14 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 08:25:09 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,21 +54,17 @@ t_stringbuilder	*check_var(char *s, t_env_head *head, t_stringbuilder *sb)
 				|| s[1] == '/' || s[1] == '\0')))
 		return (c = ft_itoa(head->thead->e_s), sb_append_str(sb, c), \
 				free (c), sb);
-	while (s[i] != '\0' && s[i] != ' ' && !ms_ispipe(s[i]) && s[i] != '"')
+	while (s[i] != '\0' && s[i] != ' ' && \
+	s[i] != '/' && !ms_ispipe(s[i]) && s[i] != '\'')
 		i++;
 	var = ms_strdup(s, i);
 	while (temp->next != NULL)
 	{
 		if (ms_strcmp_exact(temp->key, var) == 0)
-		{
-			sb_append_str(sb, temp->value);
-			free (var);
-			return (sb);
-		}
+			return (sb_append_str(sb, temp->value), free (var), sb);
 		temp = temp->next;
 	}
-	free(var);
-	return (NULL);
+	return (free(var), NULL);
 }
 
 t_stringbuilder	*h(char *s, t_env_head *h, t_stringbuilder *sb, unsigned int *f)
@@ -88,7 +84,9 @@ t_stringbuilder	*h(char *s, t_env_head *h, t_stringbuilder *sb, unsigned int *f)
 		{
 			check_var(s + i, h, sb);
 			while (s[i] != '\0' && s[i] != ' ' && !ms_ispipe(s[i]) \
-				&& s[i] != '"')
+				&& s[i] != '\'')
+				i++;
+			if (s[i] == '/')
 				i++;
 			continue ;
 		}
@@ -100,8 +98,6 @@ t_stringbuilder	*h(char *s, t_env_head *h, t_stringbuilder *sb, unsigned int *f)
 
 char	*expander(char *s, t_env_head *head)
 {
-	int					i;
-	int					j;
 	char				*new;
 	unsigned int		flags;
 	t_stringbuilder		*sb;

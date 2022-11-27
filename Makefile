@@ -6,7 +6,7 @@
 #    By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/24 22:05:24 by dantonik          #+#    #+#              #
-#    Updated: 2022/11/26 23:17:00 by cboubour         ###   ########.fr        #
+#    Updated: 2022/11/27 09:15:42 by cboubour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,9 @@ SRC = main.c \
 	builtins/ft_pwd.c \
 	builtins/exit.c \
 	env/env_ll.c \
+	env/env_ll2.c \
 	expander/expander.c \
+	expander/quotes.c \
 	lexer/lexer.c \
 	lexer/lexer_ll.c \
 	lexer/handle_string.c \
@@ -68,7 +70,7 @@ all: $(NAME)
 # $(OBJDIR)/%.o: %.c | $(OBJDIR)
 # 	@$(CC) $(INCREADH) -c $^ -o $@
 $(OBJDIR)/%.o: %.c | $(OBJDIR)
-	@$(CC) $(INCLUDES) -MMD -MP -c $^ -o $@
+	@$(CC) $(FLAGS) $(INCLUDES) -MMD -MP -c $^ -o $@
 
 $(OBJDIR):
 	@mkdir -p $(OBJDIR)

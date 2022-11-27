@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/02 14:41:01 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 06:44:19 by cboubour         ###   ########.fr       */
+/*   Created: 2022/11/27 08:59:14 by cboubour          #+#    #+#             */
+/*   Updated: 2022/11/27 09:00:18 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,36 +30,27 @@ char	*check_echo_flag(t_node *node, char *s)
 			s += 2;
 		}
 		else
-		{
-			my_free(str);
-			return (s);
-		}
-		while (str[i][j] && str[i][j] == 'n')
-		{
-			j++;
+			return (my_free(str), s);
+		while (str[i][j] && str[i][j++] == 'n')
 			s++;
-		}
 		i++;
 		if (*s && *s == ' ')
 			s++;
 	}
-	my_free(str);
-	return (s);
+	return (my_free(str), s);
 }
 
 void	ft_echo(t_node *node, char *s)
 {
-	int	i;
-
 	s += 4;
 	if (*s && *s != ' ')
 	{
 		printf("trash: command not found\n");
 		node->t_builtin = 0;
-		node->head->e_s = 1;
 		return ;
 	}
 	s++;
+	remove_dup_c2(s);
 	s = check_echo_flag(node, s);
 	if (*s && *s == ' ')
 		s++;
@@ -70,23 +61,26 @@ void	ft_echo(t_node *node, char *s)
 	}
 	if (node->echo_n == FALSE)
 		printf("\n");
-	node->head->e_s = 0;
+}
+
+void	ft_clear(char *s)
+{
+	if (ms_strcmp_exact("ft_clear", s) == 0)
+		printf("\e[1;1H\e[2J");
+	else
+		printf("trash: command not found\n");
 }
 
 void	check_builtins(t_head *head)
 {
 	t_node	*current;
 
-	if (head == NULL)
-		return ;
 	current = head->head;
 	while (current != NULL)
 	{
 		if (ft_strncmp(current->cmnd, "echo", 4) == 0)
-		{
-			current->t_builtin = T_ECHO;
-			current->echo_n = FALSE;
-		}
+			return (current->t_builtin = T_ECHO, \
+			current->echo_n = FALSE, free_list(NULL));
 		if (ft_strncmp(current->cmnd, "cd", 2) == 0)
 			current->t_builtin = T_CD;
 		if (ft_strncmp(current->cmnd, "pwd", 3) == 0)
@@ -99,6 +93,8 @@ void	check_builtins(t_head *head)
 			current->t_builtin = T_ENV;
 		if (ft_strncmp(current->cmnd, "exit", 4) == 0)
 			current->t_builtin = T_EXIT;
+		if (ft_strncmp(current->cmnd, "ft_clear", 8) == 0)
+			current->t_builtin = T_CLEAR;
 		current = current->next;
 	}
 }
@@ -107,18 +103,21 @@ void	built_in(t_env_head *envp, t_node *current, t_bool forked)
 {
 	if (current->t_builtin == T_ECHO)
 		ft_echo(current, current->cmnd);
+	current->head->e_s = 0;
 	if (current->t_builtin == T_CD)
-		return (current->head->e_s = 0, (void)ft_cd(current));
+		ft_cd(current);
 	if (current->t_builtin == T_PWD)
-		return (current->head->e_s = 0, (void)ft_pwd());
+		ft_pwd();
 	if (current->t_builtin == T_EXPORT)
-		return (current->head->e_s = 0, (void)ft_export(&envp, current->cmnd));
+		ft_export(&envp, current->cmnd);
 	if (current->t_builtin == T_UNSET)
-		return (current->head->e_s = 0, (void)ft_unset(&envp, current->cmnd));
+		ft_unset(&envp, current->cmnd, 1);
 	if (current->t_builtin == T_ENV)
-		return (current->head->e_s = 0, (void)ft_env(envp));
+		printl_env(envp);
 	if (current->t_builtin == T_EXIT)
-		return (current->head->e_s = 0, (void)exit(exit_code(current)));
+		exit(exit_code(current));
+	if (current->t_builtin == T_CLEAR)
+		ft_clear(current->cmnd);
 	if (forked)
 		exit(EXIT_SUCCESS);
 	else

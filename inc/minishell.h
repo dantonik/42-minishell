@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:13 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 06:27:49 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 09:17:52 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ void		check_builtins(t_head *head);
 int			ft_cd(t_node *temp);
 int			ft_pwd(void);
 // ENV VARS
-void		ft_env(t_env_head *head);
 void		ft_export(t_env_head **head, char *cmnd);
-void		ft_unset(t_env_head **head, char *s);
+void		ft_unset(t_env_head **head, char *s, int i);
+int			check_exp(t_env_head **head, char *cmnd, int i);
 
 //// ENV ll
 void		printl_export(t_env_head *head);
@@ -84,6 +84,10 @@ void		add_token_tail(t_head **head, char *str, int type);
 void		free_list(t_head *a);
 void		printl(t_head *head);
 void		free_list_loop(t_head **a);
+t_head		*init_head(char **argv);
+
+//// QUOTES
+void		remove_dup_c2(char *s);
 
 //// PIPES
 int			redirect_in(t_node *head);
@@ -91,8 +95,8 @@ int			redirect_out(t_node *head);
 int			last_red_in(t_node *temp, int red);
 void		validate(t_node *head, t_env_head *envp);
 t_node		*execute(t_node *head);
-void		pipes_child(t_node *temp, char *command);
-void		pipes_parent(t_node *temp, char *command);
+void		pipes_child(t_node *temp);
+void		pipes_parent(t_node *temp);
 int			main_loop(t_head *head, t_env_head *envp);
 int			pipe_in_out(t_node *current);
 int			ret(char *err, t_bool perr, int fd, int cmnd);
@@ -100,7 +104,7 @@ void		my_free(char **arr);
 char		**path_str(t_env_head *envp);
 t_bool		is_cm(t_node *current, int direction);
 char		**split_paths(t_env_head *envp);
-char		*ft_join_path(char *s1, char connector, char *s2);
+char		*ft_join_path(char *s1, char *s2);
 int			exit_code(t_node *temp);
 
 //// STRING BUILDER

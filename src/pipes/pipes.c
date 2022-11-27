@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 01:00:04 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/27 06:38:47 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 09:16:39 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,9 @@ int	pipe_in_out(t_node *current)
 	return (res);
 }
 
-void	pipes_child(t_node *temp, char *command)
+void	pipes_child(t_node *temp)
 {
 	int	pipe_loc;
-	int	read_pipe;
 
 	pipe_loc = pipe_in_out(temp->head->current);
 	if (temp->head->std_input[0] != 1 && (pipe_loc == 0 || pipe_loc == P_BOTH))
@@ -119,7 +118,7 @@ void	pipes_child(t_node *temp, char *command)
 	close(temp->head->pipe_fd[WRITE]);
 }
 
-void	pipes_parent(t_node *temp, char *command)
+void	pipes_parent(t_node *temp)
 {
 	int	pipe_loc;
 

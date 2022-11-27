@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:22:15 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/27 07:14:06 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 09:20:04 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	valid_check(t_node *temp, char **paths, char **command)
 	i = 0;
 	while (paths[i])
 	{
-		path = ft_join_path(paths[i], '/', command[0]);
+		path = ft_join_path(paths[i], command[0]);
 		if (access(path, F_OK | X_OK) == 0)
 			temp->cmnd_path = ft_strdup(path);
 		free(path);
@@ -76,13 +76,13 @@ static void	fork_exec(t_node *temp, char **command)
 	if (pid == 0)
 	{
 		envp_char = path_str(temp->head->envp_ours);
-		pipes_child(temp, command[0]);
+		pipes_child(temp);
 		if (temp->t_builtin != 0)
 			built_in(temp->head->envp_ours, temp, TRUE);
 		else if (execve(temp->cmnd_path, command, envp_char) == -1)
 			perror("execve");
 	}
-	pipes_parent(temp, command[0]);
+	pipes_parent(temp);
 }
 
 t_node	*execute(t_node *temp)

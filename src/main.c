@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 07:12:35 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 09:11:55 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,24 @@ static int	check_empty_input(char *input)
 		return (0);
 }
 
+int	check_quotes(char *input)
+{
+	unsigned short	flags;
+
+	flags = 0;
+	while (*input != '\0')
+	{
+		if (*input == '\'' && !(flags & DQ_FLAG))
+			flags ^= SQ_FLAG;
+		else if (*input == '"' && !(flags & SQ_FLAG))
+			flags ^= DQ_FLAG;
+		input++;
+	}
+	if (flags & SQ_FLAG || flags & DQ_FLAG)
+		return (1);
+	return (0);
+}
+
 int	inner_loop(t_head *head, t_env_head *env_head, char *input)
 {
 	input = NULL;
@@ -55,6 +73,8 @@ int	inner_loop(t_head *head, t_env_head *env_head, char *input)
 		return (free (input), 0);
 	else
 		add_history(input);
+	if (check_quotes(input) == 1)
+		return (printf("trash: invalid input!\n"), free(input), 0);
 	input = expander(input, env_head);
 	if (check_empty_input(input))
 		return (printf("trash: invalid input!\n"), free(input), 0);
@@ -67,15 +87,6 @@ int	inner_loop(t_head *head, t_env_head *env_head, char *input)
 	free(input);
 	free_list_loop(&head);
 	return (0);
-}
-
-t_head	*init_head(char **argv)
-{
-	t_head	*head;
-
-	(void) argv;
-	return (head = (t_head *)ft_calloc(1, sizeof(t_head)), \
-	head->std_input[1] = dup(0), head->std_output[1] = dup(1), head);
 }
 
 char	**path_str(t_env_head *envp)
@@ -120,6 +131,7 @@ int	main(int argc, char **argv, char **envp)
 		exit(1);
 	signal(SIGINT, handler);
 	signal(SIGQUIT, handler);
+	input = NULL;
 	while (1)
 		if (inner_loop(head, env_head, input) == -1)
 			break ;

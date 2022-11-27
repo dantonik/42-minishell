@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/26 03:53:08 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/26 03:55:16 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 09:17:37 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ char	**split_paths(t_env_head *envp)
 	return (paths);
 }
 
-char	*ft_join_path(char *s1, char connector, char *s2)
+char	*ft_join_path(char *s1, char *s2)
 {
 	char	*temp;
 	char	*path;

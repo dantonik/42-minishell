@@ -6,7 +6,7 @@
 /*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:16:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 06:27:32 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/27 09:10:52 by cboubour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ typedef struct Node
 		T_EXPORT,
 		T_UNSET,
 		T_ENV,
-		T_EXIT
+		T_EXIT,
+		T_CLEAR
 	}	t_builtin;
 	enum
 	{
