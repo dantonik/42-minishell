@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 08:59:14 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/27 09:00:18 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/28 04:26:39 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	ft_echo(t_node *node, char *s)
 		return ;
 	}
 	s++;
-	remove_dup_c2(s);
+	remove_quotes(s);
 	s = check_echo_flag(node, s);
 	if (*s && *s == ' ')
 		s++;

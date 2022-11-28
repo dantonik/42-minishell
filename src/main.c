@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:26 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/28 00:56:35 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/28 04:45:30 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,9 @@ int	check_quotes(char *input)
 	flags = 0;
 	while (*input != '\0')
 	{
-		if (*input == '\'' && !(flags & DQ_FLAG))
+		if (*input == '\\')
+			input++;
+		else if (*input == '\'' && !(flags & DQ_FLAG))
 			flags ^= SQ_FLAG;
 		else if (*input == '"' && !(flags & SQ_FLAG))
 			flags ^= DQ_FLAG;
@@ -82,36 +84,12 @@ int	inner_loop(t_head *head, t_env_head *env_head, char *input)
 	head->temp_fd = -1;
 	head->envp_ours = env_head;
 	create_list(&head, input);
+	printl(head);
 	check_builtins(head);
 	main_loop(head, env_head);
 	free(input);
 	free_list_loop(&head);
 	return (0);
-}
-
-char	**path_str(t_env_head *envp)
-{
-	char		**paths;
-	t_env_node	*current;
-	char		*temp;
-	int			i;
-
-	paths = ft_calloc(envp->length + 1, sizeof(char *));
-	i = 0;
-	current = envp->head;
-	while (current != NULL)
-	{
-		if (current->value != NULL)
-		{
-			temp = ft_strjoin(current->key, "=");
-			paths[i] = ft_strjoin(temp, current->value);
-			free(temp);
-		}
-		current = current->next;
-		i++;
-	}
-	paths[i] = NULL;
-	return (paths);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -137,7 +115,6 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 	if (input)
 		free (input);
-	system("leaks minishell");
 	return (close(head->std_input[1]), close(head->std_output[1]), \
 	free_list_loop(&head), free_list_env(&env_head), free(head), \
 	free(env_head), rl_clear_history(), 0);

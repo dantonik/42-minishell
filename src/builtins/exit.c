@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/26 21:12:13 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/26 23:42:57 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/28 04:42:20 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,11 @@ int	exit_code(t_node *temp)
 
 	cmnd = ft_split(temp->cmnd, ' ');
 	arr_size = get_arr_size(cmnd);
+	if (arr_size > 2)
+	{
+		my_free(cmnd);
+		return (printf("exit\ntrash: exit: too many arguments\n"), 1);
+	}
 	if (arr_size > 1)
 	{
 		if (cmnd[1] && check_valid_arg(cmnd[1]))
@@ -58,9 +63,4 @@ int	exit_code(t_node *temp)
 	}
 	else
 		return (my_free(cmnd), 0);
-	if (arr_size > 2)
-	{
-		my_free(cmnd);
-		return (printf("exit\ntrash: exit: too many arguments\n"), 1);
-	}
 }

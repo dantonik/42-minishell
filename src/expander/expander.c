@@ -6,7 +6,7 @@
 /*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 20:34:25 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 08:25:09 by dantonik         ###   ########.fr       */
+/*   Updated: 2022/11/28 04:37:00 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,16 @@ t_stringbuilder	*check_var(char *s, t_env_head *head, t_stringbuilder *sb)
 	return (free(var), NULL);
 }
 
+void	expand(char *s, t_env_head *h, t_stringbuilder *sb, int *i)
+{
+	check_var(s + *i, h, sb);
+	while (s[*i] != '\0' && s[*i] != ' ' && !ms_ispipe(s[*i]) \
+		&& s[*i] != '\'')
+		(*i)++;
+	if (s[*i] == '/')
+		(*i)++;
+}
+
 t_stringbuilder	*h(char *s, t_env_head *h, t_stringbuilder *sb, unsigned int *f)
 {
 	int	i;
@@ -76,22 +86,18 @@ t_stringbuilder	*h(char *s, t_env_head *h, t_stringbuilder *sb, unsigned int *f)
 	j = 0;
 	while (s[i] != '\0')
 	{
-		if (s[i] == '\'' && !((*f) & DQ_FLAG))
+		if (s[i] == '\\')
+			sb_append_char(sb, s[i++]);
+		else if (s[i] == '\'' && !((*f) & DQ_FLAG))
 			(*f) ^= SQ_FLAG;
-		if (s[i] == '"' && !((*f) & SQ_FLAG))
+		else if (s[i] == '"' && !((*f) & SQ_FLAG))
 			(*f) ^= DQ_FLAG;
 		if (s[i] == '$' && !((*f) & SQ_FLAG))
 		{
-			check_var(s + i, h, sb);
-			while (s[i] != '\0' && s[i] != ' ' && !ms_ispipe(s[i]) \
-				&& s[i] != '\'')
-				i++;
-			if (s[i] == '/')
-				i++;
+			expand(s, h, sb, &i);
 			continue ;
 		}
-		sb_append_char(sb, s[i]);
-		i++;
+		sb_append_char(sb, s[i++]);
 	}
 	return (sb);
 }
@@ -108,11 +114,6 @@ char	*expander(char *s, t_env_head *head)
 	sb_append_char(sb, '\0');
 	new = sb_get_str(sb);
 	sb_destroy(sb);
-	if (flags & SQ_FLAG || flags & DQ_FLAG)
-	{
-		free (new);
-		return (NULL);
-	}
 	remove_dup_c(new, ' ');
 	free (s);
 	return (new);

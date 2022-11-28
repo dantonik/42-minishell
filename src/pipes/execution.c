@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:22:15 by cboubour          #+#    #+#             */
-/*   Updated: 2022/11/27 09:20:04 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/28 04:38:03 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,4 +110,29 @@ t_node	*execute(t_node *temp)
 		temp = temp->next;
 	}
 	return (temp);
+}
+
+char	**path_str(t_env_head *envp)
+{
+	char		**paths;
+	t_env_node	*current;
+	char		*temp;
+	int			i;
+
+	paths = ft_calloc(envp->length + 1, sizeof(char *));
+	i = 0;
+	current = envp->head;
+	while (current != NULL)
+	{
+		if (current->value != NULL)
+		{
+			temp = ft_strjoin(current->key, "=");
+			paths[i] = ft_strjoin(temp, current->value);
+			free(temp);
+		}
+		current = current->next;
+		i++;
+	}
+	paths[i] = NULL;
+	return (paths);
 }

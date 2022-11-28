@@ -3,49 +3,51 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 06:16:13 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 09:41:12 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/28 04:34:19 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-t_bool	remove_duo_c2_help(char *s, unsigned short *flags, int i, int *j)
+static t_bool	setty(char *s, unsigned short *flags, char c, int *j)
+{
+	int	quotes_flag;
+
+	quotes_flag = DQ_FLAG;
+	if (c == '\'')
+		quotes_flag = SQ_FLAG;
+	(*flags) ^= quotes_flag;
+	(*j)++;
+	if (s[(*j)] == c)
+	{
+		(*flags) ^= quotes_flag;
+		(*j)++;
+	}
+	*s = s[(*j)];
+	return (true);
+}
+
+static t_bool	remove_quotes_helper(char *s, \
+unsigned short *flags, int i, int *j)
 {
 	if (s[i + (*j)] == '\\')
 			(*j)++;
 	else if (s[i + (*j)] == '\'' && !((*flags) & DQ_FLAG))
 	{
-		(*flags) ^= SQ_FLAG;
-		(*j)++;
-		if (s[i + (*j)] == '\'')
-		{
-			(*flags) ^= SQ_FLAG;
-			(*j)++;
-			printf("in here\n");
-		}
-		s[i] = s[i + (*j)];
-		return (true);
+		return (setty(s + i, flags, '\'', j));
 	}
 	else if (s[i + (*j)] == '"' && !((*flags) & SQ_FLAG))
 	{
-		(*flags) ^= DQ_FLAG;
-		(*j)++;
-		if (s[i + (*j)] == '"')
-		{
-			(*flags) ^= DQ_FLAG;
-			(*j)++;
-		}
-		s[i] = s[i + (*j)];
-		return (true);
+		return (setty(s + i, flags, '"', j));
 	}
 	s[i] = s[i + (*j)];
 	return (false);
 }
 
-void	remove_dup_c2(char *s)
+void	remove_quotes(char *s)
 {
 	int				i;
 	int				j;
@@ -56,7 +58,7 @@ void	remove_dup_c2(char *s)
 	flags = 0;
 	while (s[i + j] != '\0')
 	{
-		if (remove_duo_c2_help(s, &flags, i, &j))
+		if (remove_quotes_helper(s, &flags, i, &j))
 			continue ;
 		i++;
 	}

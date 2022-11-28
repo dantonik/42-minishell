@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cboubour <cboubour@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: dantonik <dantonik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:12:13 by dantonik          #+#    #+#             */
-/*   Updated: 2022/11/27 09:17:52 by cboubour         ###   ########.fr       */
+/*   Updated: 2022/11/28 04:29:16 by dantonik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 # define P_BOTH 10
 # define SQ_FLAG 0b00000001
 # define DQ_FLAG 0b00000010
+# define BS_FLAG 0b00000100
 
 //// BUILTINS
 void		built_in(t_env_head *envp, t_node *current, t_bool forked);
@@ -87,7 +88,7 @@ void		free_list_loop(t_head **a);
 t_head		*init_head(char **argv);
 
 //// QUOTES
-void		remove_dup_c2(char *s);
+void		remove_quotes(char *s);
 
 //// PIPES
 int			redirect_in(t_node *head);
